@@ -1,11 +1,5 @@
-from types import TracebackType
-from typing import Optional
-
 from domain.person import Person
-
-
-class RepoError(Exception):
-    pass
+from repo.repo_error import RepoError
 
 
 class PersonRepo(object):

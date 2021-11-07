@@ -1,7 +1,8 @@
 from unittest import TestCase
 
 from domain.person import Person
-from repo.person_repo import PersonRepo, RepoError
+from repo.person_repo import PersonRepo
+from repo.repo_error import RepoError
 
 
 class TestPersonRepo(TestCase):
@@ -10,6 +11,19 @@ class TestPersonRepo(TestCase):
         self.__test_repo = PersonRepo([Person(1, "maria", "cluj"),
                                        Person(2, "george", "turda"),
                                        Person(3, "cornel", "constanța")])
+    def test_find(self):
+        person = self.__test_repo.get_all()[0]
+        try:
+            self.__test_repo.find(person)
+        except RepoError:
+            self.fail()
+        person = Person(0, "a", "a")
+        try:
+            self.__test_repo.find(person)
+            self.fail()
+        except RepoError as e:
+            if str(e) != "persoana nu exista":
+                self.fail()
 
     def test_find_by_id(self):
         person = self.__test_repo.find_by_id(1)
