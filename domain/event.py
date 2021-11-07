@@ -1,6 +1,9 @@
+from datetime import datetime
+
+
 class Event(object):
 
-    def __init__(self, e_id, e_date, e_duration, e_des):
+    def __init__(self, e_id: int, e_date: datetime, e_duration: int, e_des: str):
         self.__e_id = e_id
         self.__e_date = e_date
         self.__e_duration = e_duration

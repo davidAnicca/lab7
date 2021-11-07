@@ -11,6 +11,7 @@ class TestPersonRepo(TestCase):
         self.__test_repo = PersonRepo([Person(1, "maria", "cluj"),
                                        Person(2, "george", "turda"),
                                        Person(3, "cornel", "constanța")])
+
     def test_find(self):
         person = self.__test_repo.get_all()[0]
         try:
@@ -74,15 +75,14 @@ class TestPersonRepo(TestCase):
                 self.fail()
 
     def test_delete(self):
-        person_to_be_deleted : Person = self.__test_repo.get_all()[0]
+        person_to_be_deleted: Person = self.__test_repo.get_all()[0]
         self.__test_repo.delete(person_to_be_deleted)
         if person_to_be_deleted in self.__test_repo.get_all():
             self.fail()
-        person_to_be_deleted : Person = Person(-1, "a", "a")
+        person_to_be_deleted: Person = Person(-1, "a", "a")
         try:
             self.__test_repo.delete(person_to_be_deleted)
             self.fail()
         except RepoError as e:
             if str(e) != "persoana nu exista":
                 self.fail()
-
