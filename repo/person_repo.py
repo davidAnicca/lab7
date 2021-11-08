@@ -38,3 +38,4 @@ class PersonRepo(object):
     def delete(self, person: Person):
         self.find(person)
         self.__persons.remove(person)
+        del person

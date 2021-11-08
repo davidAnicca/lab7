@@ -17,3 +17,9 @@ class Tests(object):
         #event repo tests:
         test_event_repo = TestEventRepo()
         test_event_repo.test_find()
+        test_event_repo.test_find_by_id()
+        test_event_repo.test_add()
+        test_event_repo.test_modify_date()
+        test_event_repo.test_modify_duration()
+        test_event_repo.test_modify_descriprion()
+        test_event_repo.test_delete()

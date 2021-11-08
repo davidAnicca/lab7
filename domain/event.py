@@ -1,5 +1,4 @@
-from datetime import datetime
-
+import datetime
 
 class Event(object):
 
