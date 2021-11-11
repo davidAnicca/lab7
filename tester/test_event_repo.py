@@ -19,12 +19,12 @@ class TestEventRepo(TestCase):
     def test_find(self):
         event: Event = self.__test_repo.get_all()[0]
         try:
-            self.__test_repo.find(event)
+            self.__test_repo.assert_exist(event)
         except RepoError:
             self.fail()
         event = Event(0, datetime.datetime.today(), 1, "nu ex")
         try:
-            self.__test_repo.find(event)
+            self.__test_repo.assert_exist(event)
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":

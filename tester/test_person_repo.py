@@ -19,12 +19,12 @@ class TestPersonRepo(TestCase):
     def test_find(self):
         person = self.__test_repo.get_all()[0]
         try:
-            self.__test_repo.find(person)
+            self.__test_repo.assert_exist(person)
         except RepoError:
             self.fail()
         person = Person(0, "a", "a")
         try:
-            self.__test_repo.find(person)
+            self.__test_repo.assert_exist(person)
             self.fail()
         except RepoError as e:
             if str(e) != "persoana nu exista":

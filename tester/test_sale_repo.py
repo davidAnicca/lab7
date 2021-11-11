@@ -17,11 +17,11 @@ class TestSaleRepo(TestCase):
 
     def test_find(self):
         try:
-            self.__test_repo.find(self.__test_repo.get_all()[0])
+            self.__test_repo.assert_exist(self.__test_repo.get_all()[0])
         except RepoError:
             self.fail()
         try:
-            self.__test_repo.find(Sale(Person(7, "a", "a"), Event(7, datetime.date.today(), 3, "as")))
+            self.__test_repo.assert_exist(Sale(Person(7, "a", "a"), Event(7, datetime.date.today(), 3, "as")))
             self.fail()
         except RepoError as e:
             if str(e) != "participarea nu există":

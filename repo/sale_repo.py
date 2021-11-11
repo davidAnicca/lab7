@@ -13,7 +13,7 @@ class SaleRepo(object):
     def get_all(self):
         return self.__sales
 
-    def find(self, sale):
+    def assert_exist(self, sale):
         """
         checks if a sale exist in repo
         :param sale: given sale
@@ -76,6 +76,6 @@ class SaleRepo(object):
         :param sale: sale to be deleted
         :raise: RepoError if the sale doesn't exist
         """
-        self.find(sale)
+        self.assert_exist(sale)
         self.__sales.remove(sale)
         del sale

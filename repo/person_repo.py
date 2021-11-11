@@ -10,16 +10,16 @@ class PersonRepo(object):
     able to delete invalid objects
     """
 
-    def __init__(self, persons):
+    def __init__(self, persons: list):
         self.__persons: list = persons
 
     # returns all persons from self. repo
     def get_all(self):
         return self.__persons
 
-    def find(self, person):
+    def assert_exist(self, person):
         """
-        checks if a person exist or not in self repository.
+        checks if a person exist in self repository.
         it deletes the person object if it doesn't exist
         :param person: person object
         :return: -
@@ -58,7 +58,7 @@ class PersonRepo(object):
         :param name: new name to be changed
         :raises: RepoError if person doesn't exist
         """
-        self.find(person)
+        self.assert_exist(person)
         person.set_name(name)
 
     def modify_address(self, person: Person, address):
@@ -68,7 +68,7 @@ class PersonRepo(object):
         :param address: new address to be changed
         :raises: RepoError if person doesn't exist
         """
-        self.find(person)
+        self.assert_exist(person)
         person.set_address(address)
 
     def delete(self, person: Person, sale_repo: SaleRepo):
@@ -78,7 +78,7 @@ class PersonRepo(object):
         :param person: event to be deleted
         :raises: RepoError if person doesn't exist
         """
-        self.find(person)
+        self.assert_exist(person)
         self.__persons.remove(person)
         sales = sale_repo.find_by__person(person)
         for sale in sales:

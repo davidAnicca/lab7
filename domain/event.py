@@ -1,5 +1,6 @@
 import datetime
 
+
 class Event(object):
 
     def __init__(self, e_id: int, e_date: datetime, e_duration: int, e_des: str):
@@ -28,4 +29,3 @@ class Event(object):
 
     def set_description(self, e_description):
         self.__e_des = e_description
-
