@@ -51,3 +51,21 @@ class TestSaleRepo(TestCase):
         except RepoError as e:
             if str(e) != "participarea deja există":
                 self.fail()
+
+    def test_delete(self):
+        sale_to_delete = Sale(Person(7, "a", "a"), Event(7, datetime.date.today(), 3, "as"))
+        try:
+            self.__test_repo.delete(sale_to_delete)
+            self.fail()
+        except RepoError as e:
+            if str(e) != "participarea nu există":
+                self.fail()
+
+        sale_to_delete = self.__test_repo.get_all()[0]
+        self.__test_repo.delete(sale_to_delete)
+        if sale_to_delete in self.__test_repo.get_all()[0]:
+            self.fail()
+
+
+
+

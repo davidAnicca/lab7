@@ -23,6 +23,30 @@ class SaleRepo(object):
             del sale
             raise RepoError("participarea nu există")
 
+    def find_by__person(self, person):
+        """
+        returns all sales that contain a person
+        :param person: given person
+        :return: a list
+        """
+        sales = []
+        for sale in self.__sales:
+            if sale.get_person() == person:
+                sales.append(sale)
+        return sales
+
+    def find_by_event(self, event):
+        """
+        return all sales that contain an event
+        :param event: given event
+        :return: a list
+        """
+        sales = []
+        for sale in self.__sales:
+            if sale.get_event() == event:
+                sales.append(sale)
+        return sales
+
     def find_by_pair(self, person: Person, event: Event):
         """
         search for a sale in repo using pair params
@@ -45,3 +69,13 @@ class SaleRepo(object):
             del sale
             raise RepoError("participarea deja există")
         self.__sales.append(sale)
+
+    def delete(self, sale: Sale):
+        """
+        deletes a sale from repo
+        :param sale: sale to be deleted
+        :raise: RepoError if the sale doesn't exist
+        """
+        self.find(sale)
+        self.__sales.remove(sale)
+        del sale

@@ -23,7 +23,7 @@ class Tests(object):
         test_event_repo.test_add()
         test_event_repo.test_modify_date()
         test_event_repo.test_modify_duration()
-        test_event_repo.test_modify_descriprion()
+        test_event_repo.test_modify_description()
         test_event_repo.test_delete()
 
         #sales repo tests:

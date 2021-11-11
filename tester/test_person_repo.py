@@ -1,8 +1,12 @@
+import datetime
 from unittest import TestCase
 
+from domain.event import Event
 from domain.person import Person
+from domain.sale import Sale
 from repo.person_repo import PersonRepo
 from repo.repo_error import RepoError
+from repo.sale_repo import SaleRepo
 
 
 class TestPersonRepo(TestCase):
@@ -76,12 +80,16 @@ class TestPersonRepo(TestCase):
 
     def test_delete(self):
         person_to_be_deleted: Person = self.__test_repo.get_all()[0]
-        self.__test_repo.delete(person_to_be_deleted)
+        used_sale = Sale(person_to_be_deleted, Event(1, datetime.date.today(), 1, "a"))
+        sale_repo = SaleRepo([used_sale])
+        self.__test_repo.delete(person_to_be_deleted, sale_repo)
         if person_to_be_deleted in self.__test_repo.get_all():
+            self.fail()
+        if used_sale in sale_repo.get_all():
             self.fail()
         person_to_be_deleted: Person = Person(-1, "a", "a")
         try:
-            self.__test_repo.delete(person_to_be_deleted)
+            self.__test_repo.delete(person_to_be_deleted, sale_repo)
             self.fail()
         except RepoError as e:
             if str(e) != "persoana nu exista":

@@ -2,6 +2,7 @@ import datetime
 
 from domain.event import Event
 from repo.repo_error import RepoError
+from repo.sale_repo import SaleRepo
 
 
 class EventRepo(object):
@@ -82,12 +83,16 @@ class EventRepo(object):
         self.find(event)
         event.set_description(new_desc)
 
-    def delete(self, event):
+    def delete(self, event, sale_repo: SaleRepo):
         """
-        deletes an event from repo
+        deletes an event from repo and all sales with that event
+        :param sale_repo: sale repo
         :param event: event to be deleted
         :raises: RepoError if event doesn't exist
         """
         self.find(event)
         self.__events.remove(event)
+        sales = sale_repo.find_by_event(event)
+        for sale in sales:
+            sale_repo.delete(sale)
         del event

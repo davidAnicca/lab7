@@ -2,8 +2,11 @@ import datetime
 from unittest import TestCase
 
 from domain.event import Event
+from domain.person import Person
+from domain.sale import Sale
 from repo.event_repo import EventRepo
 from repo.repo_error import RepoError
+from repo.sale_repo import SaleRepo
 
 
 class TestEventRepo(TestCase):
@@ -74,7 +77,7 @@ class TestEventRepo(TestCase):
             if str(e) != "evenimentul nu exista":
                 self.fail()
 
-    def test_modify_descriprion(self):
+    def test_modify_description(self):
         event: Event = self.__test_repo.get_all()[0]
         self.__test_repo.modify_description(event, "a")
         if event.get_description() != "a":
@@ -89,11 +92,15 @@ class TestEventRepo(TestCase):
 
     def test_delete(self):
         event: Event = self.__test_repo.get_all()[0]
-        self.__test_repo.delete(event)
+        used_sale = Sale(Person(1, "a", "a"), event)
+        sales_repo = SaleRepo([used_sale])
+        self.__test_repo.delete(event, sales_repo)
         if event in self.__test_repo.get_all():
             self.fail()
+        if used_sale in sales_repo.get_all():
+            self.fail()
         try:
-            self.__test_repo.delete(Event(5, datetime.datetime.today(), 1, "aaa"))
+            self.__test_repo.delete(Event(5, datetime.datetime.today(), 1, "aaa"), sales_repo)
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":
