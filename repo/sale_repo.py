@@ -1,5 +1,6 @@
 from domain.event import Event
 from domain.person import Person
+from domain.sale import Sale
 from repo.repo_error import RepoError
 
 
@@ -12,11 +13,18 @@ class SaleRepo(object):
         return self.__sales
 
     def find(self, sale):
-        if sale in self.__sales:
+        if sale not in self.__sales:
             del sale
-            raise RepoError("participarea deja există")
+            raise RepoError("participarea nu există")
 
     def find_by_pair(self, person: Person, event: Event):
-        pass
+        for sale in self.__sales:
+            if sale.get_person() == person and sale.get_event() == event:
+                return sale
+        return None
 
-
+    def add(self, sale: Sale):
+        if self.find_by_pair(sale.get_person(), sale.get_event()):
+            del sale
+            raise RepoError("participarea deja există")
+        self.__sales.append(sale)
