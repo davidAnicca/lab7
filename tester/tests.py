@@ -37,5 +37,7 @@ class Tests(object):
         logic_tests = LogicTests()
         logic_tests.test_get_event_w_max_duration()
         logic_tests.test_get_person_with_most_events()
+        logic_tests.test_give_all_events_ordered_by_duration()
+
 
         print("teste trecute cu succes")

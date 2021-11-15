@@ -5,6 +5,7 @@ from domain.event import Event
 from domain.person import Person
 from domain.sale import Sale
 from logic.event_logic import EventLogic
+from logic.person_logic import PersonLogic
 from repo.event_repo import EventRepo
 from repo.person_repo import PersonRepo
 from repo.sale_repo import SaleRepo
@@ -21,11 +22,11 @@ class LogicTests(TestCase):
                                               Person(4, "ionel", "cluj")])
         self.__test_sale_repo = SaleRepo([Sale(self.__test_person_repo.get_all()[0],
                                                self.__test_events_repo.get_all()[1]),
-                                          Sale(self.__test_person_repo.get_all()[1],
+                                          Sale(self.__test_person_repo.get_all()[1],  # 1
                                                self.__test_events_repo.get_all()[2]),
-                                          Sale(self.__test_person_repo.get_all()[1],
+                                          Sale(self.__test_person_repo.get_all()[1],  # 2
                                                self.__test_events_repo.get_all()[0]),
-                                          Sale(self.__test_person_repo.get_all()[1],
+                                          Sale(self.__test_person_repo.get_all()[1],  # 3
                                                self.__test_events_repo.get_all()[2]),
                                           Sale(self.__test_person_repo.get_all()[2],
                                                self.__test_events_repo.get_all()[2]),
@@ -42,5 +43,13 @@ class LogicTests(TestCase):
             self.fail()
 
     def test_get_person_with_most_events(self):
-        empty_repo = PersonRepo([])#todo
+        empty_repo = PersonRepo([])
+        person_logic = PersonLogic(empty_repo, self.__test_sale_repo)
+        if len(person_logic.get_person_with_most_events()) > 0:
+            self.fail()
+        person_logic = PersonLogic(self.__test_person_repo, self.__test_sale_repo)
+        if self.__test_person_repo.get_all()[1] not in person_logic.get_person_with_most_events():
+            self.fail()
+
+    def test_give_all_events_ordered_by_duration(self):
         self.fail()
