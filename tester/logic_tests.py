@@ -20,8 +20,8 @@ class LogicTests(TestCase):
                                               Person(1, "cristian", "turda"),
                                               Person(2, "maria", "cluj"),
                                               Person(3, "ionel", "cluj")])
-        self.__test_sale_repo = SaleRepo([Sale(self.__test_person_repo.get_all()[0],  # 0 1
-                                               self.__test_events_repo.get_all()[1]),
+        self.__test_sale_repo = SaleRepo([Sale(self.__test_person_repo.get_all()[0],  # 0 2
+                                               self.__test_events_repo.get_all()[2]),
                                           Sale(self.__test_person_repo.get_all()[1],  # 1 2
                                                self.__test_events_repo.get_all()[2]),
                                           Sale(self.__test_person_repo.get_all()[1],  # 1 0
@@ -32,13 +32,21 @@ class LogicTests(TestCase):
                                                self.__test_events_repo.get_all()[2]),
                                           ])
 
+    def test_get_20_p(self):
+        event_logic = EventLogic(self.__test_events_repo, self.__test_sale_repo)
+        events = event_logic.get_first_20_p_with_participants()
+        if len(events) != 1:
+            self.fail()
+        if self.__test_events_repo.get_all()[2] != events[0]:
+            self.fail()
+
     def test_get_event_w_max_duration(self):
         empty_repo = EventRepo([])
-        event_logic = EventLogic(empty_repo)
+        event_logic = EventLogic(empty_repo, self.__test_sale_repo)
         if event_logic.get_event_with_max_duration() is not None:
             self.fail()
         del event_logic
-        event_logic = EventLogic(self.__test_events_repo)
+        event_logic = EventLogic(self.__test_events_repo, self.__test_sale_repo)
         if event_logic.get_event_with_max_duration() != self.__test_events_repo.get_all()[1]:
             self.fail()
 
