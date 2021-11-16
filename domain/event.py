@@ -29,3 +29,6 @@ class Event(object):
 
     def set_description(self, e_description):
         self.__e_des = e_description
+
+    def __str__(self):
+        return str(self.__e_id)

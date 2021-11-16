@@ -20,7 +20,8 @@ class Person(object):
     def set_address(self, p_address):
         self.__p_address = p_address
 
-
+    def __str__(self):
+        return self.__p_name + " " + str(self.__p_id)
 
 
 

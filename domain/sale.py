@@ -21,4 +21,4 @@ class Sale(object):
         self.__event = event
 
     def __str__(self):
-        return str(self.__person) + str(self.__event) #TODO
+        return str(self.__person) + " " + str(self.__event)

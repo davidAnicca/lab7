@@ -1,6 +1,11 @@
+from domain.event import Event
 from domain.person import Person
 from repo.person_repo import PersonRepo
 from repo.sale_repo import SaleRepo
+
+
+def duration(event: Event):
+    return event.get_duration()
 
 
 class PersonLogic(object):
@@ -34,9 +39,9 @@ class PersonLogic(object):
                 identified.append(person)
         return identified
 
-    def get_all_my_events_ordered_by_duration(self, person: Person):
+    def get_all_my_events_ordered_by_date(self, person: Person):
         """
-        for a person, returns all events sorted by duration
+        for a person, returns all events sorted by date
         :param person: given person
         :return: a list of events (sorted)
         """
@@ -45,4 +50,19 @@ class PersonLogic(object):
         for sale in sales:
             if sale.get_person() == person:
                 events.append(sale.get_event())
-        return events.sort(key=lambda ev: ev.get_duration())
+        events.sort(key=lambda e: e.get_date())
+        return events
+
+    def get_all_my_events_ordered_by_duration(self, person: Person):
+        """
+                for a person, returns all events sorted by description
+                :param person: given person
+                :return: a list of events (sorted)
+                """
+        sales = self.__sale_repo.get_all()
+        events = []
+        for sale in sales:
+            if sale.get_person() == person:
+                events.append(sale.get_event())
+        events.sort(key=lambda e: e.get_description())
+        return events
