@@ -2,6 +2,7 @@ from tester.logic_tests import LogicTests
 from tester.test_event_repo import TestEventRepo
 from tester.test_person_repo import TestPersonRepo
 from tester.test_sale_repo import TestSaleRepo
+from tester.validation_tests import ValidationTests
 
 
 class Tests(object):
@@ -41,5 +42,8 @@ class Tests(object):
         logic_tests.test_give_all_events_ordered_by_date()
         logic_tests.test_give_all_events_ordered_by_description()
 
+        #validation test:
+        validation_tests = ValidationTests()
+        validation_tests.test_validate_event()
 
         print("teste trecute cu succes")

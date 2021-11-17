@@ -28,6 +28,10 @@ class EventLogic(object):
         return event_w_max_duration
 
     def get_first_20_p_with_participants(self):
+        """
+        finds first 20% of events with a big number of participants
+        :return: a list of events
+        """
         events_w_participants = []
         events = self.__event_repo.get_all()
         sales = self.__sale_repo.get_all()
