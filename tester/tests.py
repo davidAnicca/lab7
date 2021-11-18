@@ -61,5 +61,8 @@ class Tests(object):
         controler_tests.test_add_event()
         controler_tests.test_delete_event()
         controler_tests.test_modify_event()
+        controler_tests.test_create_sale()
+        controler_tests.test_add_sale()
+        controler_tests.test_delete_sale()
 
         print("teste trecute cu succes")

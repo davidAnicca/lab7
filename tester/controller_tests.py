@@ -3,6 +3,7 @@ from unittest import TestCase
 
 from controller.event_srv import EventService
 from controller.person_srv import PersonService
+from controller.sale_srv import SaleService
 from domain.event import Event
 from domain.person import Person
 from domain.sale import Sale
@@ -17,10 +18,11 @@ from validation.validation_error import ValidationError
 class ControllerTest(TestCase):
     def __init__(self):
         self.__test_events_repo = EventRepo([Event(0, datetime.date.today(), 1, "a"),
-                                             Event(1, datetime.date.today() + datetime.timedelta(days=20), 6, "c"),
-                                             Event(2, datetime.date.today() + datetime.timedelta(days=10), 1, "b")])
+                                             Event(1, datetime.date.today() + datetime.timedelta(days=20), 6, "c"),  #del
+                                             Event(2, datetime.date.today() + datetime.timedelta(days=10), 1, "b"),
+                                             Event(3, datetime.date.today() + datetime.timedelta(days=10), 1, "b")])
         self.__test_person_repo = PersonRepo([Person(0, "marcel", "cluj"),
-                                              Person(1, "cristian", "turda"),
+                                              Person(1, "cristian", "turda"),  #del
                                               Person(2, "maria", "cluj"),
                                               Person(3, "ionel", "cluj")])
         self.__test_sale_repo = SaleRepo([Sale(self.__test_person_repo.get_all()[0],  # 0 2
@@ -36,6 +38,7 @@ class ControllerTest(TestCase):
                                           ])
         self.__test_person_srv = PersonService(self.__test_person_repo, self.__test_sale_repo)
         self.__test_event_srv = EventService(self.__test_events_repo, self.__test_sale_repo)
+        self.__test_sale_srv = SaleService(self.__test_person_repo, self.__test_events_repo, self.__test_sale_repo)
 
     def test_create_person(self):
         p_id = 4
@@ -78,14 +81,13 @@ class ControllerTest(TestCase):
         except RepoError as e:
             if str(e) != "persoana nu exista":
                 self.fail()
-        person = self.__test_person_repo.find_by_id(1)
-        try:
-            self.__test_person_srv.delete_person(1)
-            persons = self.__test_person_repo.get_all()
-            if person in persons:
+
+        self.__test_person_srv.delete_person(1)
+        persons = self.__test_person_repo.get_all()
+        for person in persons:
+            if person.get_id() == 1:
                 self.fail()
-        except Exception:
-            self.fail()
+
 
     def test_modify(self):
         try:
@@ -212,3 +214,74 @@ class ControllerTest(TestCase):
                 modified.get_description() != "blabla":
             self.fail()
 
+    def test_create_sale(self):
+        try:
+            self.__test_sale_srv.create_sale(22, 1)
+            self.fail()
+        except RepoError as e:
+            if str(e) != "persoana nu exista":
+                self.fail()
+        try:
+            self.__test_sale_srv.create_sale(3, 22)
+            self.fail()
+        except RepoError as e:
+            if str(e) != "evenimentul nu exista":
+                self.fail()
+        sale: Sale = self.__test_sale_srv.create_sale(2, 2)
+        if sale.get_person() != self.__test_person_repo.find_by_id(2):
+            self.fail()
+        if sale.get_event() != self.__test_events_repo.find_by_id(2):
+            self.fail()
+
+    def test_add_sale(self):
+        try:
+            self.__test_sale_srv.add_sale(22, 1)
+            self.fail()
+        except RepoError as e:
+            if str(e) != "persoana nu exista":
+                self.fail()
+        try:
+            self.__test_sale_srv.add_sale(3, 22)
+            self.fail()
+        except RepoError as e:
+            if str(e) != "evenimentul nu exista":
+                self.fail()
+        try:
+            self.__test_sale_srv.add_sale(2, 2)
+            self.fail()
+        except RepoError as e:
+            if str(e) != "participarea deja există":
+                self.fail()
+        self.__test_sale_srv.add_sale(2, 0)
+        sales = self.__test_sale_repo.get_all()
+        for sale in sales:
+            if sale.get_person() == self.__test_person_repo.find_by_id(2) and \
+                    sale.get_event() == self.__test_events_repo.find_by_id(0):
+                return
+        self.fail()
+
+    def test_delete_sale(self):
+        try:
+            self.__test_sale_srv.create_sale(22, 1)
+            self.fail()
+        except RepoError as e:
+            if str(e) != "persoana nu exista":
+                self.fail()
+        try:
+            self.__test_sale_srv.create_sale(3, 22)
+            self.fail()
+        except RepoError as e:
+            if str(e) != "evenimentul nu exista":
+                self.fail()
+        try:
+            self.__test_sale_srv.delete_sale(2, 3)
+            self.fail()
+        except RepoError as e:
+            if str(e) != "participarea nu există":
+                self.fail()
+        self.__test_sale_srv.delete_sale(2, 0)
+        sales = self.__test_sale_repo.get_all()
+        for sale in sales:
+            if sale.get_person() == self.__test_person_repo.find_by_id(2) and \
+                    sale.get_event() == self.__test_events_repo.find_by_id(0):
+                self.fail()

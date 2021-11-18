@@ -41,6 +41,8 @@ class PersonService(object):
         """
         try:
             person = self.__person_repo.find_by_id(p_id)
+            if person is None:
+                raise RepoError("persoana nu exista")
             self.__person_repo.delete(person, self.__sale_repo)
         except RepoError as e:
             raise e
