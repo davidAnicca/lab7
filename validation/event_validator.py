@@ -6,7 +6,8 @@ from validation.validation_error import ValidationError
 
 class EventValidator(object):
 
-    def validate_date(self, date):
+    @staticmethod
+    def validate_date(date):
         """
         tests if a date is logically valid for an event
         :param date: given date

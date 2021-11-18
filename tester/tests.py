@@ -57,5 +57,9 @@ class Tests(object):
         controler_tests.test_create_person()
         controler_tests.test_add_person()
         controler_tests.test_delete()
+        controler_tests.test_create_event()
+        controler_tests.test_add_event()
+        controler_tests.test_delete_event()
+        controler_tests.test_modify_event()
 
         print("teste trecute cu succes")
