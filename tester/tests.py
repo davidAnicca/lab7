@@ -1,9 +1,13 @@
+from controller.random_generator import RandomGen
 from tester.controller_tests import ControllerTest
 from tester.logic_tests import LogicTests
+from tester.random_gen_t import RandomGenT
 from tester.test_event_repo import TestEventRepo
 from tester.test_person_repo import TestPersonRepo
 from tester.test_sale_repo import TestSaleRepo
 from tester.validation_tests import ValidationTests
+
+
 
 
 class Tests(object):
@@ -64,5 +68,10 @@ class Tests(object):
         controler_tests.test_create_sale()
         controler_tests.test_add_sale()
         controler_tests.test_delete_sale()
+
+        #generator test:
+        random_gen_t = RandomGenT()
+        random_gen_t.test_generate_persons()
+
 
         print("teste trecute cu succes")

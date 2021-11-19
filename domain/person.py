@@ -21,7 +21,8 @@ class Person(object):
         self.__p_address = p_address
 
     def __str__(self):
-        return self.__p_name + " " + str(self.__p_id)
+        return self.__p_name + (" "*(25-len(self.__p_name))) +\
+               self.__p_address + (" "*(30-len(self.__p_address))) + "  id: " + str(self.__p_id)
 
 
 
