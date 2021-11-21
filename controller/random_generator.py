@@ -1,16 +1,39 @@
+import datetime
 import random
 
+from controller.event_srv import EventService
 from controller.person_srv import PersonService
 from repo.person_repo import PersonRepo
 from repo.repo_error import RepoError
 
 
 class RandomGen(object):
-    def __init__(self, person_srv: PersonService):
-        self.__person_srv = person_srv
+    def __init__(self, service):
+        self.__service = service
+
+    def generate_event_info(self):
+        e_id = random.randint(0, 100000)
+        letters = [random.choice("abcdefghijklmnopqrstuvwxyz ") for _ in range(1, random.randint(5, 20))]
+        e_des = ""
+        for letter in letters:
+            e_des += letter
+        today = datetime.date.today()
+        date = today + datetime.timedelta(days=random.randint(1, 100))
+        duration = random.randint(1, 24)
+        return e_id, date, duration, e_des
+
+    def generate_events(self, number):
+        index = 1
+        while index <= number:
+            info = self.generate_event_info()
+            try:
+                self.__service.add_event(info[0], info[1], info[2], info[3])
+                index += 1
+            except RepoError:
+                pass
 
     def generate_person_info(self):
-        p_id = random.randint(0, 100)
+        p_id = random.randint(0, 100000)
         first_letter = random.choice("ABCDEFGHIJKLMNOPQRSTUVQXYZ")
         random_letters = [random.choice("abcdefghijklmnopqrstuvwxyz ") for _ in range(1, random.randint(5, 20))]
         p_name = first_letter
@@ -28,7 +51,7 @@ class RandomGen(object):
         while index <= number_of_persons:
             person_info = self.generate_person_info()
             try:
-                self.__person_srv.add_person(person_info[0], person_info[1], person_info[2])
+                self.__service.add_person(person_info[0], person_info[1], person_info[2])
                 index += 1
             except RepoError:
                 pass
