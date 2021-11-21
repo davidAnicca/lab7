@@ -1,3 +1,4 @@
+from domain.person import Person
 from domain.sale import Sale
 from repo.event_repo import EventRepo
 from repo.person_repo import PersonRepo
@@ -18,7 +19,7 @@ class SaleService(object):
         :param e_id: e id
         :raises: RepoError if event or person cannot be found or both
         """
-        person = self.__person_repo.find_by_id(p_id)
+        person = self.__person_repo.find(Person(p_id, "a", "a"))
         if person is None:
             raise RepoError("persoana nu exista")
         event = self.__event_repo.find_by_id(e_id)
@@ -33,7 +34,7 @@ class SaleService(object):
         :param e_id: e id
         :raises: RepoError if person or event cannot be found. Also RepoError if the sale is already in repo
         """
-        person = self.__person_repo.find_by_id(p_id)
+        person = self.__person_repo.find(Person(p_id, "a", "a"))
         if person is None:
             raise RepoError("persoana nu exista")
         event = self.__event_repo.find_by_id(e_id)
@@ -46,7 +47,7 @@ class SaleService(object):
         deletes the sale that contain person with p_id and event with e_id :param p_id: :param e_id: :raises:
         RepoError if person/event cannot be found. RepoError if doesn't exist a sale with given person and event
         """
-        person = self.__person_repo.find_by_id(p_id)
+        person = self.__person_repo.find(Person(p_id, "a", "a"))
         if person is None:
             raise RepoError("persoana nu exista")
         event = self.__event_repo.find_by_id(e_id)

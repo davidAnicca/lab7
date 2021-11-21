@@ -20,7 +20,10 @@ class RandomGenT(TestCase):
         print(str(number) + " persoane: ")
         if len(persons) != number:
             self.fail()
+        print("\nnume:" + (" " * (25 - len("nume:"))) + \
+        "adresă:" + (" " * (30 - len("adresă:"))) + "  id: ")
         for person in persons:
             print(str(person))
+        print()
 
 

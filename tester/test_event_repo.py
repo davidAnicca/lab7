@@ -57,7 +57,7 @@ class TestEventRepo(TestCase):
         if event.get_date() != datetime.datetime.today():
             self.fail()
         try:
-            self.__test_repo.modify_date(Event(5, datetime.datetime.today(), 1, "aaa"),
+            self.__test_repo.modify_date(Event(545, datetime.datetime.today(), 1, "aaa"),
                                          datetime.datetime.today())
             self.fail()
         except RepoError as e:

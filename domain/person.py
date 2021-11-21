@@ -24,7 +24,6 @@ class Person(object):
         return self.__p_name + (" "*(25-len(self.__p_name))) +\
                self.__p_address + (" "*(30-len(self.__p_address))) + "  id: " + str(self.__p_id)
 
-
-
-
+    def __eq__(self, other):
+        return self.__p_id == other.get_id()
 

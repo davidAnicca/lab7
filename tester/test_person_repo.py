@@ -19,24 +19,26 @@ class TestPersonRepo(TestCase):
     def test_find(self):
         person = self.__test_repo.get_all()[0]
         try:
-            self.__test_repo.assert_exist(person)
+            self.__test_repo.find(person)
         except RepoError:
             self.fail()
         person = Person(0, "a", "a")
         try:
-            self.__test_repo.assert_exist(person)
+            self.__test_repo.find(person)
             self.fail()
         except RepoError as e:
             if str(e) != "persoana nu exista":
                 self.fail()
 
     def test_find_by_id(self):
-        person = self.__test_repo.find_by_id(1)
+        person = self.__test_repo.find(Person(1, "maria", "c"))
         if person != self.__test_repo.get_all()[0]:
             self.fail()
-        person = self.__test_repo.find_by_id(0)
-        if person is not None:
+        try:
+            person = self.__test_repo.find(Person(0, "a", "a"))
             self.fail()
+        except RepoError:
+            pass
 
     def test_add(self):
         person_to_add = Person(4, "Ioan", "București")
@@ -52,31 +54,23 @@ class TestPersonRepo(TestCase):
             if str(e) != "id deja existent":
                 self.fail()
 
-    def test_modify_name(self):
+    def test_modify(self):
         person_to_be_modified: Person = self.__test_repo.get_all()[0]
-        self.__test_repo.modify_name(person_to_be_modified, "marcel")
+        new_person = (Person(person_to_be_modified.get_id(), "marcel", "new address"))
+        self.__test_repo.modify(new_person)
+        person_to_be_modified: Person = self.__test_repo.get_all()[0]
         if person_to_be_modified.get_name() != "marcel":
+            self.fail()
+        if person_to_be_modified.get_address() != "new address":
             self.fail()
         person_to_be_modified: Person = Person("-7", "k", "k")
         try:
-            self.__test_repo.modify_name(person_to_be_modified, "a")
+            self.__test_repo.modify(person_to_be_modified)
             self.fail()
         except RepoError as e:
             if str(e) != "persoana nu exista":
                 self.fail()
 
-    def test_modify_address(self):
-        person_to_be_modified: Person = self.__test_repo.get_all()[0]
-        self.__test_repo.modify_address(person_to_be_modified, "new address")
-        if person_to_be_modified.get_address() != "new address":
-            self.fail()
-        person_to_be_modified: Person = Person("-7", "k", "k")
-        try:
-            self.__test_repo.modify_address(person_to_be_modified, "a")
-            self.fail()
-        except RepoError as e:
-            if str(e) != "persoana nu exista":
-                self.fail()
 
     def test_delete(self):
         person_to_be_deleted: Person = self.__test_repo.get_all()[0]

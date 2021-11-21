@@ -17,28 +17,18 @@ class PersonRepo(object):
     def get_all(self):
         return self.__persons
 
-    def assert_exist(self, person):
-        """
-        checks if a person exist in self repository.
-        it deletes the person object if it doesn't exist
-        :param person: person object
-        :return: -
-        :raises: RepoError if the person doesn't exist.
-        """
-        if person not in self.__persons:
-            del person
-            raise RepoError("persoana nu exista")
 
-    def find_by_id(self, p_id):
+    def find(self, person: Person):
         """
-        checks if an person-id exist or not in self repo
-        :param p_id: id to be found
-        :return: an person object with given id or None if doesn't exist
+        checks if a person is in repo or not
+        :returns that person if can find it
+        :raises: RepoError if the person cannot be found
         """
-        for person in self.__persons:
-            if person.get_id() == p_id:
-                return person
-        return None
+        persons = self.get_all()
+        for p in persons:
+            if p == person:
+                return p
+        raise RepoError("persoana nu exista")
 
     def add(self, person: Person):
         """
@@ -46,30 +36,21 @@ class PersonRepo(object):
         :param person: person to be added
         :raises: RepoError if given person has an id that already exist in repo
         """
-        if self.find_by_id(person.get_id()) is not None:
-            del person
-            raise RepoError("id deja existent")
-        self.__persons.append(person)
+        try:
+            self.find(person)
+        except RepoError:
+            self.__persons.append(person)
+            return
+        raise RepoError("id deja existent")
 
-    def modify_name(self, person: Person, name):
+    def modify(self, person):
         """
-        modifies name for a person
-        :param person: person to be modified
-        :param name: new name to be changed
-        :raises: RepoError if person doesn't exist
+        changes the person from repo with an id with another instance
+        :param person: new person to be changed
+        :raises: RepoError if person cannot be found
         """
-        self.assert_exist(person)
-        person.set_name(name)
-
-    def modify_address(self, person: Person, address):
-        """
-        modifies address for a person
-        :param person: person to be modified
-        :param address: new address to be changed
-        :raises: RepoError if person doesn't exist
-        """
-        self.assert_exist(person)
-        person.set_address(address)
+        old_person = self.find(person)
+        old_person = person
 
     def delete(self, person: Person, sale_repo: SaleRepo):
         """
@@ -78,7 +59,7 @@ class PersonRepo(object):
         :param person: event to be deleted
         :raises: RepoError if person doesn't exist
         """
-        self.assert_exist(person)
+        self.find(person)
         self.__persons.remove(person)
         sales = sale_repo.find_by__person(person)
         for sale in sales:

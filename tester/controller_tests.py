@@ -107,7 +107,7 @@ class ControllerTest(TestCase):
         try:
             self.__test_person_srv.modify_name(1, "name")
             self.__test_person_srv.modify_address(1, "address")
-            person: Person = self.__test_person_repo.find_by_id(1)
+            person: Person = self.__test_person_repo.find(Person(1, "a", "a"))
             if person.get_name() != "name" or person.get_address() != "address":
                 self.fail()
         except Exception:
@@ -228,7 +228,7 @@ class ControllerTest(TestCase):
             if str(e) != "evenimentul nu exista":
                 self.fail()
         sale: Sale = self.__test_sale_srv.create_sale(2, 2)
-        if sale.get_person() != self.__test_person_repo.find_by_id(2):
+        if sale.get_person() != self.__test_person_repo.find(Person(2, "a", "a")):
             self.fail()
         if sale.get_event() != self.__test_events_repo.find_by_id(2):
             self.fail()
@@ -255,7 +255,7 @@ class ControllerTest(TestCase):
         self.__test_sale_srv.add_sale(2, 0)
         sales = self.__test_sale_repo.get_all()
         for sale in sales:
-            if sale.get_person() == self.__test_person_repo.find_by_id(2) and \
+            if sale.get_person() == self.__test_person_repo.find(Person(2, "a", "a")) and \
                     sale.get_event() == self.__test_events_repo.find_by_id(0):
                 return
         self.fail()
@@ -282,6 +282,6 @@ class ControllerTest(TestCase):
         self.__test_sale_srv.delete_sale(2, 0)
         sales = self.__test_sale_repo.get_all()
         for sale in sales:
-            if sale.get_person() == self.__test_person_repo.find_by_id(2) and \
+            if sale.get_person() == self.__test_person_repo.find(Person(2, "a", "a")) and \
                     sale.get_event() == self.__test_events_repo.find_by_id(0):
                 self.fail()

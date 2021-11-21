@@ -40,7 +40,7 @@ class PersonService(object):
         :raises: RepoError if the person cannot be found
         """
         try:
-            person = self.__person_repo.find_by_id(p_id)
+            person = self.__person_repo.find(Person(p_id, "a", "a"))
             if person is None:
                 raise RepoError("persoana nu exista")
             self.__person_repo.delete(person, self.__sale_repo)
@@ -62,8 +62,9 @@ class PersonService(object):
         :raises: RepoError if the person cannot be found
         """
         try:
-            person = self.__person_repo.find_by_id(p_id)
-            self.__person_repo.modify_name(person, p_name)
+            person = self.__person_repo.find(Person(p_id, "a", "a"))
+            new_person = Person(p_id, p_name, person.get_address())
+            self.__person_repo.modify(new_person)
         except RepoError as e:
             raise e
 
@@ -75,8 +76,9 @@ class PersonService(object):
         :raises: RepoError if the person cannot be found
         """
         try:
-            person = self.__person_repo.find_by_id(p_id)
-            self.__person_repo.modify_address(person, p_address)
+            person = self.__person_repo.find(Person(p_id, "a", "a"))
+            new_person = Person(p_id, person.get_name(), p_address)
+            self.__person_repo.modify(new_person)
         except RepoError as e:
             raise e
 
