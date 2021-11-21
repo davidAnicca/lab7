@@ -18,8 +18,10 @@ class MainConsole(object):
             "p": self.__p_ui.show_all,
             "rp": self.__p_ui.random,
             "e": self.__e_ui.show_all,
-            "re":self.__e_ui.random
-                           }
+            "re": self.__e_ui.random,
+            "addp": self.__p_ui.add,
+            "adde": self.__e_ui.add,
+        }
 
     def run_console(self):
         while True:
@@ -33,8 +35,6 @@ class MainConsole(object):
                 method = self.__commands[command.split()[0]](command)
             except KeyError:
                 print("comandă invalidă")
-            except RepoError as e:
-                print(str(e))
             except ValidationError as e:
                 print(str(e))
             except ValueError:
@@ -43,4 +43,3 @@ class MainConsole(object):
                 print("imposibil de transformat")
             except Exception as e:
                 print(str(e))
-
