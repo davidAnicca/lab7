@@ -58,7 +58,7 @@ class TestPersonRepo(TestCase):
         person_to_be_modified: Person = self.__test_repo.get_all()[0]
         new_person = (Person(person_to_be_modified.get_id(), "marcel", "new address"))
         self.__test_repo.modify(new_person)
-        person_to_be_modified: Person = self.__test_repo.get_all()[0]
+        person_to_be_modified: Person = self.__test_repo.find(new_person)
         if person_to_be_modified.get_name() != "marcel":
             self.fail()
         if person_to_be_modified.get_address() != "new address":
@@ -70,7 +70,6 @@ class TestPersonRepo(TestCase):
         except RepoError as e:
             if str(e) != "persoana nu exista":
                 self.fail()
-
 
     def test_delete(self):
         person_to_be_deleted: Person = self.__test_repo.get_all()[0]

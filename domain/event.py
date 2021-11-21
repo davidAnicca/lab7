@@ -33,3 +33,6 @@ class Event(object):
     def __str__(self):
         return str(self.__e_id)
 
+    def __eq__(self, other):
+        return self.__e_id == other.get_id()
+

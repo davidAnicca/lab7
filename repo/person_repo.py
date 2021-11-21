@@ -50,6 +50,8 @@ class PersonRepo(object):
         :raises: RepoError if person cannot be found
         """
         old_person = self.find(person)
+        self.__persons.remove(old_person)
+        self.__persons.append(person)
         old_person = person
 
     def delete(self, person: Person, sale_repo: SaleRepo):

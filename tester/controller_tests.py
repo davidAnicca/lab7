@@ -208,7 +208,7 @@ class ControllerTest(TestCase):
         self.__test_event_srv.modify_date(2, datetime.date.today() + datetime.timedelta(days=10))
         self.__test_event_srv.modify_duration(2, 3)
         self.__test_event_srv.modify_description(2, "blabla")
-        modified: Event = self.__test_events_repo.find_by_id(2)
+        modified: Event = self.__test_events_repo.find(Event(2, None, 0, ""))
         if modified.get_date() != datetime.date.today() + datetime.timedelta(days=10) or \
                 modified.get_duration() != 3 or \
                 modified.get_description() != "blabla":
@@ -230,7 +230,7 @@ class ControllerTest(TestCase):
         sale: Sale = self.__test_sale_srv.create_sale(2, 2)
         if sale.get_person() != self.__test_person_repo.find(Person(2, "a", "a")):
             self.fail()
-        if sale.get_event() != self.__test_events_repo.find_by_id(2):
+        if sale.get_event() != self.__test_events_repo.find(Event(2, None, 0, "")):
             self.fail()
 
     def test_add_sale(self):
@@ -256,7 +256,7 @@ class ControllerTest(TestCase):
         sales = self.__test_sale_repo.get_all()
         for sale in sales:
             if sale.get_person() == self.__test_person_repo.find(Person(2, "a", "a")) and \
-                    sale.get_event() == self.__test_events_repo.find_by_id(0):
+                    sale.get_event() == self.__test_events_repo.find(Event(0, None, 0, "")):
                 return
         self.fail()
 
@@ -283,5 +283,5 @@ class ControllerTest(TestCase):
         sales = self.__test_sale_repo.get_all()
         for sale in sales:
             if sale.get_person() == self.__test_person_repo.find(Person(2, "a", "a")) and \
-                    sale.get_event() == self.__test_events_repo.find_by_id(0):
+                    sale.get_event() == self.__test_events_repo.find(Event(0, None, 0, "")):
                 self.fail()

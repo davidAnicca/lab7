@@ -19,17 +19,16 @@ class Tests(object):
         test_person_repo.test_find()
         test_person_repo.test_find_by_id()
         test_person_repo.test_add()
+        test_person_repo.test_modify()
         test_person_repo.test_delete()
         del test_person_repo
 
         #event repo tests:
         test_event_repo = TestEventRepo()
         test_event_repo.test_find()
-        test_event_repo.test_find_by_id()
+
         test_event_repo.test_add()
-        test_event_repo.test_modify_date()
-        test_event_repo.test_modify_duration()
-        test_event_repo.test_modify_description()
+        test_event_repo.test_modify()
         test_event_repo.test_delete()
         del test_event_repo
 

@@ -19,28 +19,17 @@ class EventRepo(object):
     def get_all(self):
         return self.__events
 
-    def assert_exist(self, event):
+    def find(self, event: Event):
         """
-        checks if an events exist in self repository
-        :param event: event object
-        :return: -
-        :raises: RepoError if the event doesn't exist.
-        :obs: it deletes the event object if it doesn't exist
+        looks for an event in repo with the same id
+        :param event: event to be found
+        :return: found event
+        :raises: repo error if the event cannot be found
         """
-        if event not in self.__events:
-            del event
-            raise RepoError("evenimentul nu exista")
-
-    def find_by_id(self, e_id):
-        """
-        search for an event in repo using id
-        :param e_id: id to be found
-        :return: an event object with given id or None if doesn't exist
-        """
-        for event in self.__events:
-            if event.get_id() == e_id:
-                return event
-        return None
+        for e in self.__events:
+            if e == event:
+                return e
+        raise RepoError("evenimentul nu exista")
 
     def add(self, event):
         """
@@ -48,40 +37,23 @@ class EventRepo(object):
         :param event: event to be added
         :raises: RepoError if given event has an id that already exist in repo
         """
-        if self.find_by_id(event.get_id()) is not None:
-            del event
-            raise RepoError("id deja existent")
+        try:
+            self.find(event)
+        except RepoError:
+            self.__events.append(event)
+            return
+        raise RepoError("id deja existent")
+
+    def modify(self, event):
+        """
+        changes an event instance with another
+        :param event: new event
+        :raises: RepoError if the event cannot be found
+        """
+        old_event = self.find(event)
+        self.__events.remove(old_event)
         self.__events.append(event)
-
-    def modify_date(self, event: Event, new_date: datetime):
-        """
-        modifies date for an event
-        :param event: event to be modified
-        :param new_date: new date to be changed
-        :raises: RepoError if event doesn't exist
-        """
-        self.assert_exist(event)
-        event.set_date(new_date)
-
-    def modify_duration(self, event: Event, new_duration: int):
-        """
-        modifies duration for an event
-        :param event: event to be modified
-        :param new_duration: new duration to be changed
-        :raises: RepoError if event doesn't exist
-        """
-        self.assert_exist(event)
-        event.set_duration(new_duration)
-
-    def modify_description(self, event: Event, new_desc):
-        """
-        modifies description for an event
-        :param event: event to be modified
-        :param new_desc: new description to be changed
-        :raises: RepoError if event doesn't exist
-        """
-        self.assert_exist(event)
-        event.set_description(new_desc)
+        old_event = event
 
     def delete(self, event, sale_repo: SaleRepo):
         """
@@ -90,7 +62,7 @@ class EventRepo(object):
         :param event: event to be deleted
         :raises: RepoError if event doesn't exist
         """
-        self.assert_exist(event)
+        self.find(event)
         self.__events.remove(event)
         sales = sale_repo.find_by_event(event)
         for sale in sales:

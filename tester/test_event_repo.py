@@ -19,25 +19,18 @@ class TestEventRepo(TestCase):
     def test_find(self):
         event: Event = self.__test_repo.get_all()[0]
         try:
-            self.__test_repo.assert_exist(event)
+            self.__test_repo.find(event)
         except RepoError:
             self.fail()
         event = Event(0, datetime.datetime.today(), 1, "nu ex")
         try:
-            self.__test_repo.assert_exist(event)
+            self.__test_repo.find(event)
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":
                 self.fail()
 
-    def test_find_by_id(self):
-        event: Event = self.__test_repo.get_all()[0]
-        found_event = self.__test_repo.find_by_id(event.get_id())
-        if found_event != event:
-            self.fail()
-        found_event = self.__test_repo.find_by_id(0)
-        if found_event is not None:
-            self.fail()
+
 
     def test_add(self):
         try:
@@ -51,44 +44,20 @@ class TestEventRepo(TestCase):
             if str(e) != "id deja existent":
                 self.fail()
 
-    def test_modify_date(self):
-        event: Event = self.__test_repo.get_all()[0]
-        self.__test_repo.modify_date(event, datetime.datetime.today())
-        if event.get_date() != datetime.datetime.today():
-            self.fail()
+    def test_modify(self):
         try:
-            self.__test_repo.modify_date(Event(545, datetime.datetime.today(), 1, "aaa"),
-                                         datetime.datetime.today())
+            self.__test_repo.modify(Event(0, datetime.date.today(), 2, ""))
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":
                 self.fail()
-
-    def test_modify_duration(self):
-        event: Event = self.__test_repo.get_all()[0]
-        self.__test_repo.modify_duration(event, 3)
-        if event.get_duration() != 3:
+        new_event = Event(5, datetime.date.today() + datetime.timedelta(days=2), 2, "new")
+        self.__test_repo.modify(new_event)
+        modified: Event = self.__test_repo.find(new_event)
+        if modified.get_date() != datetime.date.today() + datetime.timedelta(days=2) or \
+                modified.get_duration() != 2 or \
+                modified.get_description() != "new":
             self.fail()
-        try:
-            self.__test_repo.modify_duration(Event(5, datetime.datetime.today(), 1, "aaa"),
-                                             3)
-            self.fail()
-        except RepoError as e:
-            if str(e) != "evenimentul nu exista":
-                self.fail()
-
-    def test_modify_description(self):
-        event: Event = self.__test_repo.get_all()[0]
-        self.__test_repo.modify_description(event, "a")
-        if event.get_description() != "a":
-            self.fail()
-        try:
-            self.__test_repo.modify_description(Event(5, datetime.datetime.today(), 1, "aaa"),
-                                                "a")
-            self.fail()
-        except RepoError as e:
-            if str(e) != "evenimentul nu exista":
-                self.fail()
 
     def test_delete(self):
         event: Event = self.__test_repo.get_all()[0]
@@ -100,10 +69,8 @@ class TestEventRepo(TestCase):
         if used_sale in sales_repo.get_all():
             self.fail()
         try:
-            self.__test_repo.delete(Event(5, datetime.datetime.today(), 1, "aaa"), sales_repo)
+            self.__test_repo.delete(Event(0, datetime.datetime.today(), 1, "aaa"), sales_repo)
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":
                 self.fail()
-
-

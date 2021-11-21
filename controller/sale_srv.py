@@ -1,3 +1,4 @@
+from domain.event import Event
 from domain.person import Person
 from domain.sale import Sale
 from repo.event_repo import EventRepo
@@ -22,7 +23,7 @@ class SaleService(object):
         person = self.__person_repo.find(Person(p_id, "a", "a"))
         if person is None:
             raise RepoError("persoana nu exista")
-        event = self.__event_repo.find_by_id(e_id)
+        event = self.__event_repo.find(Event(e_id, None, 0, ""))
         if event is None:
             raise RepoError("evenimentul nu exista")
         return Sale(person, event)
@@ -37,7 +38,7 @@ class SaleService(object):
         person = self.__person_repo.find(Person(p_id, "a", "a"))
         if person is None:
             raise RepoError("persoana nu exista")
-        event = self.__event_repo.find_by_id(e_id)
+        event = self.__event_repo.find(Event(e_id, None, 0, ""))
         if event is None:
             raise RepoError("evenimentul nu exista")
         self.__sale_repo.add(Sale(person, event))
@@ -50,7 +51,7 @@ class SaleService(object):
         person = self.__person_repo.find(Person(p_id, "a", "a"))
         if person is None:
             raise RepoError("persoana nu exista")
-        event = self.__event_repo.find_by_id(e_id)
+        event = self.__event_repo.find(Event(e_id, None, 0, ""))
         if event is None:
             raise RepoError("evenimentul nu exista")
         sale = self.__sale_repo.find_by_pair(person, event)

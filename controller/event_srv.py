@@ -41,7 +41,7 @@ class EventService(object):
         :param e_id: event id
         :raises: RepoError if event cannot be found
         """
-        event = self.__event_repo.find_by_id(e_id)
+        event = self.__event_repo.find(Event(e_id, None, 0, ""))
         self.__event_repo.delete(event, self.__sale_repo)
 
     def modify_date(self, e_id, e_date):
@@ -52,8 +52,8 @@ class EventService(object):
         :raises: RepoError if event cannot be found or ValidateError if date is invalid
         """
         EventValidator.validate_date(e_date)
-        event = self.__event_repo.find_by_id(e_id)
-        self.__event_repo.modify_date(event, e_date)
+        event = self.__event_repo.find(Event(e_id, None, 0, ""))
+        self.__event_repo.modify(Event(e_id, e_date, event.get_duration(), event.get_description()))
 
     def modify_duration(self, e_id, e_duration):
         """
@@ -62,8 +62,8 @@ class EventService(object):
         :param e_duration: new duration
         :raises: RepoError if event cannot be found
         """
-        event = self.__event_repo.find_by_id(e_id)
-        self.__event_repo.modify_duration(event, e_duration)
+        event = self.__event_repo.find(Event(e_id, None, 0, ""))
+        self.__event_repo.modify(Event(e_id, event.get_date(), e_duration, event.get_description))
 
     def modify_description(self, e_id, e_description):
         """
@@ -72,8 +72,8 @@ class EventService(object):
         :param e_description: new description
         :return: RepoError if event cannot be found
         """
-        event = self.__event_repo.find_by_id(e_id)
-        self.__event_repo.modify_description(event, e_description)
+        event = self.__event_repo.find(Event(e_id, None, 0, ""))
+        self.__event_repo.modify(Event(e_id, event.get_date(), event.get_duration(), e_description))
 
     def get_all(self):
         return self.__event_repo.get_all()
