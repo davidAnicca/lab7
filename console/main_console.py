@@ -1,5 +1,6 @@
 from console.event_ui import EventUi
 from console.person_ui import PersonUi
+from console.sales_ui import SalesUi
 from controller.event_srv import EventService
 from controller.person_srv import PersonService
 from controller.sale_srv import SaleService
@@ -14,6 +15,7 @@ class MainConsole(object):
         self.__sale_srv = sale_srv
         self.__p_ui = PersonUi(person_srv)
         self.__e_ui = EventUi(event_srv)
+        self.__s_ui = SalesUi(sale_srv)
         self.__commands = {
             "p": self.__p_ui.show_all,
             "rp": self.__p_ui.random,
@@ -21,6 +23,8 @@ class MainConsole(object):
             "re": self.__e_ui.random,
             "addp": self.__p_ui.add,
             "adde": self.__e_ui.add,
+            "s": self.__s_ui.show,
+            "ins": self.__s_ui.add,
         }
 
     def run_console(self):
