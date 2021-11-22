@@ -1,3 +1,4 @@
+from console import strings
 from console.event_ui import EventUi
 from console.person_ui import PersonUi
 from console.sales_ui import SalesUi
@@ -25,7 +26,13 @@ class MainConsole(object):
             "adde": self.__e_ui.add,
             "s": self.__s_ui.show,
             "ins": self.__s_ui.add,
+            "h": self.help
         }
+
+    # h
+    def help(self, command):
+        for com in strings.strings.values():
+            print(str(com))
 
     def run_console(self):
         while True:

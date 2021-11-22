@@ -46,4 +46,4 @@ class EventUi(object):
             except ValueError:
                 print("nu se poate transforma")
         except ValueError:
-            print(strings["date"])
+            print(strings["adde"])
