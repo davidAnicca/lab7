@@ -7,6 +7,7 @@ from controller.person_srv import PersonService
 from controller.sale_srv import SaleService
 from repo.repo_error import RepoError
 from validation.validation_error import ValidationError
+import Levenshtein as StringComparison
 
 
 class MainConsole(object):
@@ -36,8 +37,9 @@ class MainConsole(object):
         print()
 
     def run_console(self):
+        # print(StringComparison.ratio("addc", "addp"))
         while True:
-            command = input("@>")
+            command = input("\n@>")
             command = command.strip()
             if command == "":
                 continue
@@ -47,6 +49,13 @@ class MainConsole(object):
                 method = self.__commands[command.split()[0]](command)
             except KeyError:
                 print("comandă invalidă")
+                cmd = command.split()
+                commands = strings.strings.keys()
+                print("ai putea încerca: ")
+                for com in commands:
+                    r = StringComparison.ratio(cmd[0], str(com))
+                    if r > 0.5:
+                        print(strings.strings[str(com)])
             except ValidationError as e:
                 print(str(e))
             except ValueError:
