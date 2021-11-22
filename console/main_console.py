@@ -26,13 +26,14 @@ class MainConsole(object):
             "adde": self.__e_ui.add,
             "s": self.__s_ui.show,
             "ins": self.__s_ui.add,
-            "h": self.help
+            "h": self.help,
         }
 
     # h
     def help(self, command):
         for com in strings.strings.values():
-            print(str(com))
+            print(str(com), end="  ;  ")
+        print()
 
     def run_console(self):
         while True:
