@@ -11,8 +11,26 @@ class RandomGen(object):
     def __init__(self, service):
         self.__service = service
 
+    def generate_sale_info(self):
+        p_id = random.randint(0, 20)
+        e_id = random.randint(0, 20)
+        return p_id, e_id
+
+    def generate_sales(self, number):
+        if number > 40:
+            raise Exception("număr prea mare de generări")
+        index = 1
+        while index <= number:
+            params = self.generate_sale_info()
+            try:
+                self.__service.add_sale(params[0], params[1])
+                index += 1
+            except RepoError:
+                pass
+
+
     def generate_event_info(self):
-        e_id = random.randint(0, 100000)
+        e_id = random.randint(0, 20)
         letters = [random.choice("abcdefghijklmnopqrstuvwxyz ") for _ in range(1, random.randint(5, 20))]
         e_des = ""
         for letter in letters:
@@ -23,6 +41,8 @@ class RandomGen(object):
         return e_id, date, duration, e_des
 
     def generate_events(self, number):
+        if number > 10:
+            raise Exception("număr prea mare de generări")
         index = 1
         while index <= number:
             info = self.generate_event_info()
@@ -33,7 +53,7 @@ class RandomGen(object):
                 pass
 
     def generate_person_info(self):
-        p_id = random.randint(0, 100000)
+        p_id = random.randint(0, 20)
         first_letter = random.choice("ABCDEFGHIJKLMNOPQRSTUVQXYZ")
         random_letters = [random.choice("abcdefghijklmnopqrstuvwxyz ") for _ in range(1, random.randint(5, 20))]
         p_name = first_letter
@@ -47,6 +67,8 @@ class RandomGen(object):
         return int(p_id), p_name.strip(), p_address.strip()
 
     def generate_persons(self, number_of_persons: int):
+        if number_of_persons > 10:
+            raise Exception("număr prea mare de generări")
         index = 1
         while index <= number_of_persons:
             person_info = self.generate_person_info()

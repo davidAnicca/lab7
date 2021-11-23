@@ -1,3 +1,5 @@
+from console.command_error import CommandError
+from controller.random_generator import RandomGen
 from controller.sale_srv import SaleService
 from console.strings import strings
 
@@ -16,5 +18,15 @@ class SalesUi(object):
     def add(self, command):
         info = command.split()
         if len(info) != 3:
-            print(strings["ins"])
+            raise CommandError(strings["ins"])
         self.__sale_srv.add_sale(int(info[1]), int(info[2]))
+
+    #rs
+    def random(self, command):
+        if len(command.split()) > 2:
+            raise CommandError(strings["rs"])
+        number = 1
+        if len(command.split()) == 2:
+            number = int(command.split()[1])
+        rand = RandomGen(self.__sale_srv)
+        rand.generate_sales(number)

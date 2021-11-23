@@ -1,4 +1,5 @@
 from domain.person import Person
+from logic.person_logic import PersonLogic
 from repo.person_repo import PersonRepo
 from repo.repo_error import RepoError
 from repo.sale_repo import SaleRepo
@@ -81,4 +82,28 @@ class PersonService(object):
             self.__person_repo.modify(new_person)
         except RepoError as e:
             raise e
+
+    def get_active(self):
+        logic = PersonLogic(self.__person_repo, self.__sale_repo)
+        return logic.get_person_with_most_events()
+
+    def events_date(self, p_id):
+        """
+        returns events ordered by date for a person
+        :param p_id: person id
+        :raises: RepoError if the person cannot be found
+        """
+        person = self.__person_repo.find(Person(p_id, "a", "a"))
+        logic = PersonLogic(self.__person_repo, self.__sale_repo)
+        return logic.get_all_my_events_ordered_by_date(person)
+
+    def events_desc(self, p_id):
+        """
+             returns events ordered by duration for a person
+             :param p_id: person id
+             :raises: RepoError if the person cannot be found
+             """
+        person = self.__person_repo.find(Person(p_id, "a", "a"))
+        logic = PersonLogic(self.__person_repo, self.__sale_repo)
+        return logic.get_all_my_events_ordered_by_duration(person)
 

@@ -28,6 +28,18 @@ class MainConsole(object):
             "s": self.__s_ui.show,
             "ins": self.__s_ui.add,
             "h": self.help,
+            "pmn": self.__p_ui.mod_n,
+            "pma": self.__p_ui.mod_a,
+            "emd": self.__e_ui.mod_d,
+            "emdr": self.__e_ui.mod_dr,
+            "emde": self.__e_ui.mod_de,
+            "pdel": self.__p_ui.delete,
+            "edel": self.__e_ui.delete,
+            "a": self.__p_ui.active,
+            "eo": self.__p_ui.events_ordered_date,
+            "eod": self.__p_ui.events_ordered_dur,
+            "soldouts" : self.__e_ui.soldouts,
+            "rs": self.__s_ui.random,
         }
 
     # h
@@ -59,7 +71,7 @@ class MainConsole(object):
             except ValidationError as e:
                 print(str(e))
             except ValueError:
-                print("imposibil de transformat în număr")
+                print("valori numerice invalide")
             except TypeError:
                 print("imposibil de transformat")
             except Exception as e:

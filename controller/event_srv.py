@@ -1,6 +1,7 @@
 import datetime
 
 from domain.event import Event
+from logic.event_logic import EventLogic
 from repo.event_repo import EventRepo
 from repo.sale_repo import SaleRepo
 from validation.event_validator import EventValidator
@@ -63,7 +64,7 @@ class EventService(object):
         :raises: RepoError if event cannot be found
         """
         event = self.__event_repo.find(Event(e_id, None, 0, ""))
-        self.__event_repo.modify(Event(e_id, event.get_date(), e_duration, event.get_description))
+        self.__event_repo.modify(Event(e_id, event.get_date(), e_duration, event.get_description()))
 
     def modify_description(self, e_id, e_description):
         """
@@ -74,6 +75,10 @@ class EventService(object):
         """
         event = self.__event_repo.find(Event(e_id, None, 0, ""))
         self.__event_repo.modify(Event(e_id, event.get_date(), event.get_duration(), e_description))
+
+    def soldouts(self):
+        logic = EventLogic(self.__event_repo, self.__sale_repo)
+        return logic.get_first_20_p_with_participants()
 
     def get_all(self):
         return self.__event_repo.get_all()
