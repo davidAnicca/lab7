@@ -19,7 +19,7 @@ strings = {
     "eo": '\033[93m' + "eo [id]" + '\033[0m',
     "eod": '\033[93m' + "eod [id]" + '\033[0m',
 
-    "soldouts": '\033[93m' + "soldouts" + '\033[0m',                     
+    "soldouts": '\033[93m' + "soldouts" + '\033[0m',
 
     "rs": '\033[93m' + "rs [număr]" + '\033[0m',
 

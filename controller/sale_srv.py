@@ -61,3 +61,7 @@ class SaleService(object):
 
     def get_all(self):
         return self.__sale_repo.get_all()
+
+    def possible_size(self):
+        # computes the possible sale number to generate
+        return len(self.__person_repo.get_all())*len(self.__event_repo.get_all())

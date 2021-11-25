@@ -21,7 +21,7 @@ class SalesUi(object):
             raise CommandError(strings["ins"])
         self.__sale_srv.add_sale(int(info[1]), int(info[2]))
 
-    #rs
+    # rs
     def random(self, command):
         if len(command.split()) > 2:
             raise CommandError(strings["rs"])
@@ -29,4 +29,7 @@ class SalesUi(object):
         if len(command.split()) == 2:
             number = int(command.split()[1])
         rand = RandomGen(self.__sale_srv)
+        if number >= self.__sale_srv.possible_size():
+            raise Exception("nu există suficiente persoane și evenimente pentru a genera")
+
         rand.generate_sales(number)
