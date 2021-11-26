@@ -40,6 +40,7 @@ class MainConsole(object):
             "eod": self.__p_ui.events_ordered_dur,
             "soldouts" : self.__e_ui.soldouts,
             "rs": self.__s_ui.random,
+            "top3":self.__e_ui.top3,
         }
 
     # h

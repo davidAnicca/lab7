@@ -63,6 +63,7 @@ class Tests(object):
         controler_tests.test_create_sale()
         controler_tests.test_add_sale()
         controler_tests.test_delete_sale()
+        controler_tests.top3_test()
         del controler_tests
         # generator test:
         # random_gen_t = RandomGenT()

@@ -14,6 +14,10 @@ class EventUi(object):
         for element in collection:
             print(str(element))
 
+    #top3
+    def top3(self, command):
+        self.printer(self.__event_service.first_3_events())
+
     # e
     def show_all(self, command):
         events = self.__event_service.get_all()

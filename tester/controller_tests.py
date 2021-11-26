@@ -18,11 +18,12 @@ from validation.validation_error import ValidationError
 class ControllerTest(TestCase):
     def __init__(self):
         self.__test_events_repo = EventRepo([Event(0, datetime.date.today(), 1, "a"),
-                                             Event(1, datetime.date.today() + datetime.timedelta(days=20), 6, "c"),  #del
+                                             Event(1, datetime.date.today() + datetime.timedelta(days=20), 6, "c"),
+                                             # del
                                              Event(2, datetime.date.today() + datetime.timedelta(days=10), 1, "b"),
                                              Event(3, datetime.date.today() + datetime.timedelta(days=10), 1, "b")])
         self.__test_person_repo = PersonRepo([Person(0, "marcel", "cluj"),
-                                              Person(1, "cristian", "turda"),  #del
+                                              Person(1, "cristian", "turda"),  # del
                                               Person(2, "maria", "cluj"),
                                               Person(3, "ionel", "cluj")])
         self.__test_sale_repo = SaleRepo([Sale(self.__test_person_repo.get_all()[0],  # 0 2
@@ -87,7 +88,6 @@ class ControllerTest(TestCase):
         for person in persons:
             if person.get_id() == 1:
                 self.fail()
-
 
     def test_modify(self):
         try:
@@ -285,3 +285,25 @@ class ControllerTest(TestCase):
             if sale.get_person() == self.__test_person_repo.find(Person(2, "a", "a")) and \
                     sale.get_event() == self.__test_events_repo.find(Event(0, None, 0, "")):
                 self.fail()
+
+    def top3_test(self):
+        top3 = self.__test_event_srv.first_3_events()
+        if len(top3) != 1:
+            self.fail()
+        self.__test_events_repo.add(Event(20, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))
+        self.__test_events_repo.add(Event(21, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))
+        self.__test_sale_repo.add(Sale(self.__test_person_repo.find(Person(0, "a", "a")),
+                                  self.__test_events_repo.find(Event(20, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))))
+        self.__test_sale_repo.add(Sale(self.__test_person_repo.find(Person(2, "a", "a")),
+                                  self.__test_events_repo.find(Event(20, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))))
+        top3 = self.__test_event_srv.first_3_events()
+        if top3[0] != self.__test_events_repo.find(Event(2, "a", 1, "a")):
+            self.fail()
+        if top3[1] != self.__test_events_repo.find(Event(20, "a", 1, "a")):
+            self.fail()
+        if self.__test_events_repo.find(Event(21, datetime.date.today() + datetime.timedelta(days=10), 3, "a")) in top3:
+            self.fail()
+
+
+
+

@@ -12,6 +12,32 @@ class EventService(object):
         self.__event_repo = event_repo
         self.__sale_repo = sale_repo
 
+    def find(self, e_id):
+        return self.__event_repo.find(Event(e_id, datetime.datetime.today(), 2, "a"))
+
+    def first_3_events(self):
+        """
+        shows the first 3 events with biggest num of participants
+        :return: a list of events
+        """
+        events_w_participants = {}
+        events = self.__event_repo.get_all()
+        sales = self.__sale_repo.get_all()
+        for event in events:
+            for sale in sales:
+                if sale.get_event() == event:
+                    if event.get_id() not in events_w_participants.keys():
+                        events_w_participants.update({event.get_id(): 0})
+                    else:
+                        events_w_participants[event.get_id()] += 1
+        sort_events = sorted(events_w_participants.items(), key=lambda x: x[1], reverse=True)
+        new_events = []
+        for elem in sort_events:
+            new_events.append(self.__event_repo.find(Event(elem[0], datetime.date.today(), 1, "a")))
+        if len(new_events) < 3:
+            return new_events
+        return new_events[:3]
+
     def create_event(self, e_id, e_date, e_duration, e_description):
         """
         creates an event based on information
