@@ -63,13 +63,11 @@ class TestEventRepo(TestCase):
         event: Event = self.__test_repo.get_all()[0]
         used_sale = Sale(Person(1, "a", "a"), event)
         sales_repo = SaleRepo([used_sale])
-        self.__test_repo.delete(event, sales_repo)
+        self.__test_repo.delete(event)
         if event in self.__test_repo.get_all():
             self.fail()
-        if used_sale in sales_repo.get_all():
-            self.fail()
         try:
-            self.__test_repo.delete(Event(0, datetime.datetime.today(), 1, "aaa"), sales_repo)
+            self.__test_repo.delete(Event(0, datetime.datetime.today(), 1, "aaa"))
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":

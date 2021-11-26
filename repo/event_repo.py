@@ -55,7 +55,7 @@ class EventRepo(object):
         self.__events.append(event)
         old_event = event
 
-    def delete(self, event, sale_repo: SaleRepo):
+    def delete(self, event):
         """
         deletes an event from repo and all sales with that event
         :param sale_repo: sale repo
@@ -64,7 +64,4 @@ class EventRepo(object):
         """
         self.find(event)
         self.__events.remove(event)
-        sales = sale_repo.find_by_event(event)
-        for sale in sales:
-            sale_repo.delete(sale)
         del event

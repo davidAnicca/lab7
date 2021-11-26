@@ -69,7 +69,14 @@ class EventService(object):
         :raises: RepoError if event cannot be found
         """
         event = self.__event_repo.find(Event(e_id, None, 0, ""))
-        self.__event_repo.delete(event, self.__sale_repo)
+        self.__event_repo.delete(event)
+        sales = self.__sale_repo.get_all()
+        sales_to_delete = []
+        for sale in sales:
+            if sale.get_event() == event:
+                sales_to_delete.append(sale)
+        for sale in sales_to_delete:
+            self.__sale_repo.delete(sale)
 
     def modify_date(self, e_id, e_date):
         """
