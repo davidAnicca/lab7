@@ -17,7 +17,6 @@ class PersonRepo(object):
     def get_all(self):
         return self.__persons
 
-
     def find(self, person: Person):
         """
         checks if a person is in repo or not
@@ -54,16 +53,12 @@ class PersonRepo(object):
         self.__persons.append(person)
         old_person = person
 
-    def delete(self, person: Person, sale_repo: SaleRepo):
+    def delete(self, person: Person):
         """
         deletes a person from repo and all sales of it
-        :param sale_repo: sale repo
         :param person: event to be deleted
         :raises: RepoError if person doesn't exist
         """
         self.find(person)
         self.__persons.remove(person)
-        sales = sale_repo.find_by__person(person)
-        for sale in sales:
-            sale_repo.delete(sale)
         del person

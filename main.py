@@ -7,6 +7,7 @@ from controller.sale_srv import SaleService
 from domain.event import Event
 from repo.event_repo import EventRepo
 from repo.person_repo import PersonRepo
+from repo.person_repo_dto import PersonRepoDTO
 from repo.sale_repo import SaleRepo
 from tester.tests import Tests
 
@@ -16,7 +17,7 @@ class Main(object):
     def run(self):
         Tests().run_tests()
 
-        person_repo = PersonRepo([])
+        person_repo = PersonRepoDTO([])
         event_repo = EventRepo([])
         sale_repo = SaleRepo([])
 

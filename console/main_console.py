@@ -73,7 +73,7 @@ class MainConsole(object):
                 print(str(e))
             except ValueError:
                 print("valori numerice invalide")
-            except TypeError:
-                print("imposibil de transformat")
-            except Exception as e:
-                print(str(e))
+            # except TypeError:
+            #     print("imposibil de transformat")
+            # except Exception as e:
+            #     print(str(e))

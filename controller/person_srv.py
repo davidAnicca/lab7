@@ -44,7 +44,14 @@ class PersonService(object):
             person = self.__person_repo.find(Person(p_id, "a", "a"))
             if person is None:
                 raise RepoError("persoana nu exista")
-            self.__person_repo.delete(person, self.__sale_repo)
+            self.__person_repo.delete(person)
+            sales_to_delete = []
+            sales = self.__sale_repo.get_all()
+            for sale in sales:
+                if sale.get_person() == person:
+                    sales_to_delete.append(sale)
+            for sale in sales_to_delete:
+                self.__sale_repo.delete(sale)
         except RepoError as e:
             raise e
 
