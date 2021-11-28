@@ -1,13 +1,10 @@
-import datetime
-
 from console.main_console import MainConsole
 from controller.event_srv import EventService
 from controller.person_srv import PersonService
 from controller.sale_srv import SaleService
-from domain.event import Event
+from repo.dto.event_repo_dto import EventRepoDTO
 from repo.event_repo import EventRepo
-from repo.person_repo import PersonRepo
-from repo.person_repo_dto import PersonRepoDTO
+from repo.dto.person_repo_dto import PersonRepoDTO
 from repo.sale_repo import SaleRepo
 from tester.tests import Tests
 
@@ -18,7 +15,7 @@ class Main(object):
         Tests().run_tests()
 
         person_repo = PersonRepoDTO([], "repo/files/persons.csv")
-        event_repo = EventRepo([])
+        event_repo = EventRepoDTO([], "repo/files/events.csv")
         sale_repo = SaleRepo([])
 
         person_srv = PersonService(person_repo, sale_repo)

@@ -13,11 +13,11 @@ class EventRepo(object):
         """
 
     def __init__(self, events: list):
-        self.__events = events
+        self._events = events
 
     # returns all events from self. repo
     def get_all(self):
-        return self.__events
+        return self._events
 
     def find(self, event: Event):
         """
@@ -26,7 +26,7 @@ class EventRepo(object):
         :return: found event
         :raises: repo error if the event cannot be found
         """
-        for e in self.__events:
+        for e in self._events:
             if e == event:
                 return e
         raise RepoError("evenimentul nu exista")
@@ -40,7 +40,7 @@ class EventRepo(object):
         try:
             self.find(event)
         except RepoError:
-            self.__events.append(event)
+            self._events.append(event)
             return
         raise RepoError("id deja existent")
 
@@ -51,8 +51,8 @@ class EventRepo(object):
         :raises: RepoError if the event cannot be found
         """
         old_event = self.find(event)
-        self.__events.remove(old_event)
-        self.__events.append(event)
+        self._events.remove(old_event)
+        self._events.append(event)
         old_event = event
 
     def delete(self, event):
@@ -63,5 +63,5 @@ class EventRepo(object):
         :raises: RepoError if event doesn't exist
         """
         self.find(event)
-        self.__events.remove(event)
+        self._events.remove(event)
         del event

@@ -4,8 +4,7 @@ from unittest import TestCase
 from domain.event import Event
 from domain.person import Person
 from domain.sale import Sale
-from repo.person_repo import PersonRepo
-from repo.person_repo_dto import PersonRepoDTO
+from repo.dto.person_repo_dto import PersonRepoDTO
 from repo.repo_error import RepoError
 from repo.sale_repo import SaleRepo
 

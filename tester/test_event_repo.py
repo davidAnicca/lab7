@@ -4,6 +4,7 @@ from unittest import TestCase
 from domain.event import Event
 from domain.person import Person
 from domain.sale import Sale
+from repo.dto.event_repo_dto import EventRepoDTO
 from repo.event_repo import EventRepo
 from repo.repo_error import RepoError
 from repo.sale_repo import SaleRepo
@@ -12,9 +13,10 @@ from repo.sale_repo import SaleRepo
 class TestEventRepo(TestCase):
 
     def __init__(self):
-        self.__test_repo = EventRepo([Event(1, datetime.date.today(), 1, "description1"),
+        file_path = "tester/events.csv"
+        self.__test_repo = EventRepoDTO([Event(1, datetime.date.today(), 1, "description1"),
                                       Event(2, datetime.date.today(), 1, "lol"),
-                                      Event(3, datetime.date.today(), 1, "macarena")])
+                                      Event(3, datetime.date.today(), 1, "macarena")], file_path)
 
     def test_find(self):
         event: Event = self.__test_repo.get_all()[0]

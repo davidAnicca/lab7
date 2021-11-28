@@ -31,12 +31,10 @@ class Event(object):
         self.__e_des = e_description
 
     def __str__(self):
-        return str(self.__e_des) + (" "*(20-len(self.__e_des))) +\
-               str(self.__e_date) + (" "*(15-len(str(self.__e_date)))) +\
-               str(self.__e_duration) + " ore" + (" "*(5-len(str(self.__e_duration)))) +\
+        return str(self.__e_des) + (" " * (20 - len(self.__e_des))) + \
+               str(self.__e_date) + (" " * (15 - len(str(self.__e_date)))) + \
+               str(self.__e_duration) + " ore" + (" " * (5 - len(str(self.__e_duration)))) + \
                "id: " + str(self.__e_id)
-
 
     def __eq__(self, other):
         return self.__e_id == other.get_id()
-
