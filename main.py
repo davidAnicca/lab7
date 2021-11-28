@@ -17,7 +17,7 @@ class Main(object):
     def run(self):
         Tests().run_tests()
 
-        person_repo = PersonRepoDTO([])
+        person_repo = PersonRepoDTO([], "repo/files/persons.csv")
         event_repo = EventRepo([])
         sale_repo = SaleRepo([])
 

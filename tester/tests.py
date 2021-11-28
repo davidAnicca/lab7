@@ -1,6 +1,6 @@
 from controller.random_generator import RandomGen
 from tester.controller_tests import ControllerTest
-from tester.dto_tests import DtoTest
+
 from tester.logic_tests import LogicTests
 from tester.random_gen_t import RandomGenT
 from tester.test_event_repo import TestEventRepo
@@ -70,7 +70,7 @@ class Tests(object):
         # random_gen_t = RandomGenT()
         # random_gen_t.test_generate_persons()
 
-        dto_tests = DtoTest()
+
 
 
     # print("teste trecute cu succes")

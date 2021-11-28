@@ -11,11 +11,11 @@ class PersonRepo(object):
     """
 
     def __init__(self, persons: list):
-        self.__persons: list = persons
+        self._persons: list = persons
 
     # returns all persons from self. repo
     def get_all(self):
-        return self.__persons
+        return self._persons
 
     def find(self, person: Person):
         """
@@ -38,7 +38,7 @@ class PersonRepo(object):
         try:
             self.find(person)
         except RepoError:
-            self.__persons.append(person)
+            self._persons.append(person)
             return
         raise RepoError("id deja existent")
 
@@ -49,8 +49,8 @@ class PersonRepo(object):
         :raises: RepoError if person cannot be found
         """
         old_person = self.find(person)
-        self.__persons.remove(old_person)
-        self.__persons.append(person)
+        self._persons.remove(old_person)
+        self._persons.append(person)
         old_person = person
 
     def delete(self, person: Person):
@@ -60,5 +60,5 @@ class PersonRepo(object):
         :raises: RepoError if person doesn't exist
         """
         self.find(person)
-        self.__persons.remove(person)
+        self._persons.remove(person)
         del person

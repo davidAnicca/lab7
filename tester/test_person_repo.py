@@ -5,6 +5,7 @@ from domain.event import Event
 from domain.person import Person
 from domain.sale import Sale
 from repo.person_repo import PersonRepo
+from repo.person_repo_dto import PersonRepoDTO
 from repo.repo_error import RepoError
 from repo.sale_repo import SaleRepo
 
@@ -12,9 +13,13 @@ from repo.sale_repo import SaleRepo
 class TestPersonRepo(TestCase):
 
     def __init__(self):
-        self.__test_repo = PersonRepo([Person(1, "maria", "cluj"),
+        path = "tester/persons.csv"
+        with open(path, "w") as f:
+            f.write("")
+            f.close()
+        self.__test_repo = PersonRepoDTO([Person(1, "maria", "cluj"),
                                        Person(2, "george", "turda"),
-                                       Person(3, "cornel", "constanța")])
+                                       Person(3, "cornel", "constanta")], path)
 
     def test_find(self):
         person = self.__test_repo.get_all()[0]
@@ -41,12 +46,12 @@ class TestPersonRepo(TestCase):
             pass
 
     def test_add(self):
-        person_to_add = Person(4, "Ioan", "București")
+        person_to_add = Person(4, "Ioan", "Bucuresti")
         self.__test_repo.add(person_to_add)
         persons = self.__test_repo.get_all()
         if person_to_add not in persons:
             self.fail()
-        person_to_add = Person(1, "Marcel", "Bacău")
+        person_to_add = Person(1, "Marcel", "Bacau")
         try:
             self.__test_repo.add(person_to_add)
             self.fail()
