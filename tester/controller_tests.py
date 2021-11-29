@@ -1,4 +1,5 @@
 import datetime
+import unittest
 from unittest import TestCase
 
 from controller.event_srv import EventService
@@ -16,102 +17,72 @@ from validation.validation_error import ValidationError
 
 
 class ControllerTest(TestCase):
-    def __init__(self):
-        self.__test_events_repo = EventRepo([Event(0, datetime.date.today(), 1, "a"),
-                                             Event(1, datetime.date.today() + datetime.timedelta(days=20), 6, "c"),
-                                             # del
-                                             Event(2, datetime.date.today() + datetime.timedelta(days=10), 1, "b"),
-                                             Event(3, datetime.date.today() + datetime.timedelta(days=10), 1, "b")])
-        self.__test_person_repo = PersonRepo([Person(0, "marcel", "cluj"),
-                                              Person(1, "cristian", "turda"),  # del
-                                              Person(2, "maria", "cluj"),
-                                              Person(3, "ionel", "cluj")])
-        self.__test_sale_repo = SaleRepo([Sale(self.__test_person_repo.get_all()[0],  # 0 2
-                                               self.__test_events_repo.get_all()[2]),
-                                          Sale(self.__test_person_repo.get_all()[1],  # 1 2
-                                               self.__test_events_repo.get_all()[2]),
-                                          Sale(self.__test_person_repo.get_all()[1],  # 1 0
-                                               self.__test_events_repo.get_all()[0]),
-                                          Sale(self.__test_person_repo.get_all()[1],  # 1 1
-                                               self.__test_events_repo.get_all()[1]),
-                                          Sale(self.__test_person_repo.get_all()[2],  # 2 2
-                                               self.__test_events_repo.get_all()[2]),
-                                          ])
-        self.__test_person_srv = PersonService(self.__test_person_repo, self.__test_sale_repo)
-        self.__test_event_srv = EventService(self.__test_events_repo, self.__test_sale_repo)
-        self.__test_sale_srv = SaleService(self.__test_person_repo, self.__test_events_repo, self.__test_sale_repo)
+    def setUp(self) -> None:
+        self.events_repo = EventRepo([Event(0, datetime.date.today(), 1, "a"),
+                                      Event(1, datetime.date.today() + datetime.timedelta(days=20), 6, "c"),
+                                      # del
+                                      Event(2, datetime.date.today() + datetime.timedelta(days=10), 1, "b"),
+                                      Event(3, datetime.date.today() + datetime.timedelta(days=10), 1, "b")])
+        self.person_repo = PersonRepo([Person(0, "marcel", "cluj"),
+                                       Person(1, "cristian", "turda"),  # del
+                                       Person(2, "maria", "cluj"),
+                                       Person(3, "ionel", "cluj")])
+        self.sale_repo = SaleRepo([Sale(self.person_repo.get_all()[0],  # 0 2
+                                        self.events_repo.get_all()[2]),
+                                   Sale(self.person_repo.get_all()[1],  # 1 2
+                                             self.events_repo.get_all()[2]),
+                                   Sale(self.person_repo.get_all()[1],  # 1 0
+                                             self.events_repo.get_all()[0]),
+                                   Sale(self.person_repo.get_all()[1],  # 1 1
+                                             self.events_repo.get_all()[1]),
+                                   Sale(self.person_repo.get_all()[2],  # 2 2
+                                             self.events_repo.get_all()[2]),
+                                   ])
+        self.person_srv = PersonService(self.person_repo, self.sale_repo)
+        self.event_srv = EventService(self.events_repo, self.sale_repo)
+        self.sale_srv = SaleService(self.person_repo, self.events_repo, self.sale_repo)
+
+    def tearDown(self) -> None:
+        del self.events_repo
+        del self.person_repo
+        del self.sale_repo
+        del self.person_srv
+        del self.event_srv
+        del self.sale_srv
 
     def test_create_person(self):
         p_id = 4
         p_name = "nume"
         p_address = "adresaa"
-        obj = self.__test_person_srv.create_person(p_id, p_name, p_address)
-        if not isinstance(obj, Person):
-            self.fail()
-        if obj.get_id() != p_id:
-            self.fail()
-        if obj.get_name() != p_name:
-            self.fail()
-        if obj.get_address() != p_address:
-            self.fail()
+        obj = self.person_srv.create_person(p_id, p_name, p_address)
+        self.assertIsInstance(obj, Person)
+        self.assertEqual(obj.get_id(), p_id)
+        self.assertEqual(obj.get_name(), p_name)
+        self.assertEqual(obj.get_address(), p_address)
 
     def test_add_person(self):
 
         p_id = 10
         p_name = "nume"
         p_address = "adresaa"
-        try:
-            self.__test_person_srv.add_person(1, p_name, p_address)
-            self.fail()
-        except RepoError as e:
-            if str(e) != "id deja existent":
-                self.fail()
-        self.__test_person_srv.add_person(p_id, p_name, p_address)
-        persons = self.__test_person_repo.get_all()
-        for person in persons:
-            if person.get_id() == p_id and \
-                    person.get_name() == p_name and \
-                    person.get_address() == p_address:
-                return
-        self.fail()
+        self.assertRaises(RepoError, self.person_srv.add_person, 1, p_name, p_address)
+        self.person_srv.add_person(p_id, p_name, p_address)
+        person = self.person_repo.find(Person(p_id, p_name, p_address))
+        self.assertEqual(person, Person(Person(p_id, p_name, p_address)))
 
     def test_delete(self):
-        try:
-            self.__test_person_srv.delete_person(7)
-            self.fail()
-        except RepoError as e:
-            if str(e) != "persoana nu exista":
-                self.fail()
-
-        self.__test_person_srv.delete_person(1)
-        persons = self.__test_person_repo.get_all()
-        for person in persons:
-            if person.get_id() == 1:
-                self.fail()
+        self.assertRaises(RepoError, self.person_srv.delete_person, 7)
+        self.person_srv.delete_person(1)
+        self.assertRaises(RepoError, self.person_repo.find(Person(1, "", "")))
 
     def test_modify(self):
-        try:
-            self.__test_person_srv.modify_name(11, "name")
-            self.fail()
-        except RepoError as e:
-            if str(e) != "persoana nu exista":
-                self.fail()
+        self.assertRaises(RepoError, self.person_srv.modify_name, 11, "name")
+        self.assertRaises(RepoError, self.person_srv.modify_address, 11, "name")
+        self.person_srv.modify_name(1, "name")
+        self.person_srv.modify_address(1, "address")
+        self.assertEqual(self.person_repo.find(Person(1, "", "")).get_name(), "name")
+        self.assertEqual(self.person_repo.find(Person(1, "", "")).get_address(), "address")
 
-        try:
-            self.__test_person_srv.modify_address(11, "address")
-            self.fail()
-        except RepoError as e:
-            if str(e) != "persoana nu exista":
-                self.fail()
-
-        try:
-            self.__test_person_srv.modify_name(1, "name")
-            self.__test_person_srv.modify_address(1, "address")
-            person: Person = self.__test_person_repo.find(Person(1, "a", "a"))
-            if person.get_name() != "name" or person.get_address() != "address":
-                self.fail()
-        except Exception:
-            self.fail()
 
     def test_create_event(self):
         e_id = 10
@@ -119,13 +90,13 @@ class ControllerTest(TestCase):
         e_duration = 3
         e_description = "descriere"
         try:
-            self.__test_event_srv.create_event(e_id, e_date, e_duration, e_description)
+            self.event_srv.create_event(e_id, e_date, e_duration, e_description)
             self.fail()
         except ValidationError as e:
             if str(e) != "nu se poate crea un eveniment în trecut":
                 self.fail()
         e_date = e_date + datetime.timedelta(days=11)
-        obj = self.__test_event_srv.create_event(e_id, e_date, e_duration, e_description)
+        obj = self.event_srv.create_event(e_id, e_date, e_duration, e_description)
         if not isinstance(obj, Event):
             self.fail()
         if obj.get_id() != e_id or \
@@ -140,23 +111,23 @@ class ControllerTest(TestCase):
         e_duration = 3
         e_description = "desc"
         try:
-            self.__test_event_srv.add_event(1,
-                                            datetime.date.today() + datetime.timedelta(days=10),
-                                            e_duration,
-                                            e_description)
+            self.event_srv.add_event(1,
+                                     datetime.date.today() + datetime.timedelta(days=10),
+                                     e_duration,
+                                     e_description)
             self.fail()
         except RepoError as e:
             if str(e) != "id deja existent":
                 self.fail()
         try:
-            self.__test_event_srv.add_event(1, datetime.date.today() - datetime.timedelta(days=10),
-                                            e_duration,
-                                            e_description)
+            self.event_srv.add_event(1, datetime.date.today() - datetime.timedelta(days=10),
+                                     e_duration,
+                                     e_description)
         except ValidationError as e:
             if str(e) != "nu se poate crea un eveniment în trecut":
                 self.fail()
-        self.__test_event_srv.add_event(e_id, e_date + datetime.timedelta(days=10), e_duration, e_description)
-        events = self.__test_events_repo.get_all()
+        self.event_srv.add_event(e_id, e_date + datetime.timedelta(days=10), e_duration, e_description)
+        events = self.events_repo.get_all()
         for event in events:
             if event.get_id() == e_id and \
                     event.get_date() == e_date + datetime.timedelta(days=10) and \
@@ -167,48 +138,48 @@ class ControllerTest(TestCase):
 
     def test_delete_event(self):
         try:
-            self.__test_event_srv.delete_event(9)
+            self.event_srv.delete_event(9)
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":
                 self.fail()
 
-        self.__test_event_srv.delete_event(1)
-        events = self.__test_events_repo.get_all()
+        self.event_srv.delete_event(1)
+        events = self.events_repo.get_all()
         for event in events:
             if event.get_id() == 1:
                 self.fail()
 
     def test_modify_event(self):
         try:
-            self.__test_event_srv.modify_date(20, datetime.date.today() + datetime.timedelta(days=10))
+            self.event_srv.modify_date(20, datetime.date.today() + datetime.timedelta(days=10))
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":
                 self.fail()
         try:
-            self.__test_event_srv.modify_duration(20, 2)
+            self.event_srv.modify_duration(20, 2)
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":
                 self.fail()
         try:
-            self.__test_event_srv.modify_description(20, "aaaaaa")
+            self.event_srv.modify_description(20, "aaaaaa")
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":
                 self.fail()
 
         try:
-            self.__test_event_srv.modify_date(2, datetime.date.today() - datetime.timedelta(days=10))
+            self.event_srv.modify_date(2, datetime.date.today() - datetime.timedelta(days=10))
             self.fail()
         except ValidationError as e:
             if str(e) != "nu se poate crea un eveniment în trecut":
                 self.fail()
-        self.__test_event_srv.modify_date(2, datetime.date.today() + datetime.timedelta(days=10))
-        self.__test_event_srv.modify_duration(2, 3)
-        self.__test_event_srv.modify_description(2, "blabla")
-        modified: Event = self.__test_events_repo.find(Event(2, None, 0, ""))
+        self.event_srv.modify_date(2, datetime.date.today() + datetime.timedelta(days=10))
+        self.event_srv.modify_duration(2, 3)
+        self.event_srv.modify_description(2, "blabla")
+        modified: Event = self.events_repo.find(Event(2, None, 0, ""))
         if modified.get_date() != datetime.date.today() + datetime.timedelta(days=10) or \
                 modified.get_duration() != 3 or \
                 modified.get_description() != "blabla":
@@ -216,94 +187,96 @@ class ControllerTest(TestCase):
 
     def test_create_sale(self):
         try:
-            self.__test_sale_srv.create_sale(22, 1)
+            self.sale_srv.create_sale(22, 1)
             self.fail()
         except RepoError as e:
             if str(e) != "persoana nu exista":
                 self.fail()
         try:
-            self.__test_sale_srv.create_sale(3, 22)
+            self.sale_srv.create_sale(3, 22)
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":
                 self.fail()
-        sale: Sale = self.__test_sale_srv.create_sale(2, 2)
-        if sale.get_person() != self.__test_person_repo.find(Person(2, "a", "a")):
+        sale: Sale = self.sale_srv.create_sale(2, 2)
+        if sale.get_person() != self.person_repo.find(Person(2, "a", "a")):
             self.fail()
-        if sale.get_event() != self.__test_events_repo.find(Event(2, None, 0, "")):
+        if sale.get_event() != self.events_repo.find(Event(2, None, 0, "")):
             self.fail()
 
     def test_add_sale(self):
         try:
-            self.__test_sale_srv.add_sale(22, 1)
+            self.sale_srv.add_sale(22, 1)
             self.fail()
         except RepoError as e:
             if str(e) != "persoana nu exista":
                 self.fail()
         try:
-            self.__test_sale_srv.add_sale(3, 22)
+            self.sale_srv.add_sale(3, 22)
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":
                 self.fail()
         try:
-            self.__test_sale_srv.add_sale(2, 2)
+            self.sale_srv.add_sale(2, 2)
             self.fail()
         except RepoError as e:
             if str(e) != "participarea deja există":
                 self.fail()
-        self.__test_sale_srv.add_sale(2, 0)
-        sales = self.__test_sale_repo.get_all()
+        self.sale_srv.add_sale(2, 0)
+        sales = self.sale_repo.get_all()
         for sale in sales:
-            if sale.get_person() == self.__test_person_repo.find(Person(2, "a", "a")) and \
-                    sale.get_event() == self.__test_events_repo.find(Event(0, None, 0, "")):
+            if sale.get_person() == self.person_repo.find(Person(2, "a", "a")) and \
+                    sale.get_event() == self.events_repo.find(Event(0, None, 0, "")):
                 return
         self.fail()
 
     def test_delete_sale(self):
         try:
-            self.__test_sale_srv.create_sale(22, 1)
+            self.sale_srv.create_sale(22, 1)
             self.fail()
         except RepoError as e:
             if str(e) != "persoana nu exista":
                 self.fail()
         try:
-            self.__test_sale_srv.create_sale(3, 22)
+            self.sale_srv.create_sale(3, 22)
             self.fail()
         except RepoError as e:
             if str(e) != "evenimentul nu exista":
                 self.fail()
         try:
-            self.__test_sale_srv.delete_sale(2, 3)
+            self.sale_srv.delete_sale(2, 3)
             self.fail()
         except RepoError as e:
             if str(e) != "participarea nu există":
                 self.fail()
-        self.__test_sale_srv.delete_sale(2, 0)
-        sales = self.__test_sale_repo.get_all()
+        self.sale_srv.delete_sale(2, 0)
+        sales = self.sale_repo.get_all()
         for sale in sales:
-            if sale.get_person() == self.__test_person_repo.find(Person(2, "a", "a")) and \
-                    sale.get_event() == self.__test_events_repo.find(Event(0, None, 0, "")):
+            if sale.get_person() == self.person_repo.find(Person(2, "a", "a")) and \
+                    sale.get_event() == self.events_repo.find(Event(0, None, 0, "")):
                 self.fail()
 
-    def top3_test(self):
-        top3 = self.__test_event_srv.first_3_events()
+    def test_top_3(self):
+        top3 = self.event_srv.first_3_events()
         if len(top3) != 1:
             self.fail()
-        self.__test_events_repo.add(Event(20, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))
-        self.__test_events_repo.add(Event(21, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))
-        self.__test_sale_repo.add(Sale(self.__test_person_repo.find(Person(0, "a", "a")),
-                                  self.__test_events_repo.find(Event(20, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))))
-        self.__test_sale_repo.add(Sale(self.__test_person_repo.find(Person(2, "a", "a")),
-                                  self.__test_events_repo.find(Event(20, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))))
-        top3 = self.__test_event_srv.first_3_events()
-        if top3[0] != self.__test_events_repo.find(Event(2, "a", 1, "a")):
+        self.events_repo.add(Event(20, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))
+        self.events_repo.add(Event(21, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))
+        self.sale_repo.add(Sale(self.person_repo.find(Person(0, "a", "a")),
+                                self.events_repo.find(
+                                         Event(20, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))))
+        self.sale_repo.add(Sale(self.person_repo.find(Person(2, "a", "a")),
+                                self.events_repo.find(
+                                         Event(20, datetime.date.today() + datetime.timedelta(days=10), 3, "a"))))
+        top3 = self.event_srv.first_3_events()
+        if top3[0] != self.events_repo.find(Event(2, "a", 1, "a")):
             self.fail()
-        if top3[1] != self.__test_events_repo.find(Event(20, "a", 1, "a")):
+        if top3[1] != self.events_repo.find(Event(20, "a", 1, "a")):
             self.fail()
-        if self.__test_events_repo.find(Event(21, datetime.date.today() + datetime.timedelta(days=10), 3, "a")) in top3:
+        if self.events_repo.find(Event(21, datetime.date.today() + datetime.timedelta(days=10), 3, "a")) in top3:
             self.fail()
 
 
-
-
+if __name__ == '__main__':
+    unittest.main()

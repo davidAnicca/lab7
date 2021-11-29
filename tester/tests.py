@@ -1,4 +1,5 @@
 from controller.random_generator import RandomGen
+from tester import controller_tests
 from tester.controller_tests import ControllerTest
 
 from tester.logic_tests import LogicTests
@@ -53,19 +54,7 @@ class Tests(object):
         del validation_tests
 
         # controller test:
-        controler_tests = ControllerTest()
-        controler_tests.test_create_person()
-        controler_tests.test_add_person()
-        controler_tests.test_delete()
-        controler_tests.test_create_event()
-        controler_tests.test_add_event()
-        controler_tests.test_delete_event()
-        controler_tests.test_modify_event()
-        controler_tests.test_create_sale()
-        controler_tests.test_add_sale()
-        controler_tests.test_delete_sale()
-        controler_tests.top3_test()
-        del controler_tests
+
         # generator test:
         # random_gen_t = RandomGenT()
         # random_gen_t.test_generate_persons()
