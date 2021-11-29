@@ -10,7 +10,9 @@ class PersonRepoDTO(PersonRepo):
     def __init__(self, persons: list, file_path):
         PersonRepo.__init__(self, persons)
         self.__path = file_path
-        self.save_all()
+        for person in persons:
+            self.append_one(person)
+        self.__read_all()
 
     def __read_all(self):
         self._persons = []

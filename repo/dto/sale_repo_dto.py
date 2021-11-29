@@ -15,7 +15,9 @@ class SaleRepoDTO(SaleRepo):
         self.__event_repo = event_repo
         self.__file_path = file_path
         SaleRepo.__init__(self, sales)
-        self.save_all()
+        for sale in sales:
+            self.append_one(sale)
+        self.read_all()
 
     def read_all(self):
         with open(self.__file_path, 'r') as f:

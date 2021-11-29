@@ -8,7 +8,9 @@ class EventRepoDTO(EventRepo):
     def __init__(self, events: list, path):
         EventRepo.__init__(self, events)
         self.__path = path
-        self.save_all()
+        for event in events:
+            self.append_one(event)
+        self.read_all()
 
     def read_all(self):
         self._events = []

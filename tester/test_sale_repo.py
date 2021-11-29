@@ -15,6 +15,15 @@ class TestSaleRepo(TestCase):
 
     def __init__(self):
         file_path = 'tester/sales.csv'
+        with open("tester/persons.csv", 'w') as f:
+            f.write("")
+            f.close()
+        with open("tester/events.csv", 'w') as f:
+            f.write("")
+            f.close()
+        with open("tester/sales.csv", 'w') as f:
+            f.write("")
+            f.close()
         self.__person_repo = PersonRepoDTO([Person(1, "marcel", "address"), Person(2, "cristi", "address")],
                                            'tester/persons.csv')
         self.__event_repo = EventRepoDTO([Event(1, datetime.date.today(), 2, "a"),

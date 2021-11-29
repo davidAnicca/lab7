@@ -14,6 +14,9 @@ class TestEventRepo(TestCase):
 
     def __init__(self):
         file_path = "tester/events.csv"
+        with open(file_path, "w") as f:
+            f.write("")
+            f.close()
         self.__test_repo = EventRepoDTO([Event(1, datetime.date.today(), 1, "description1"),
                                       Event(2, datetime.date.today(), 1, "lol"),
                                       Event(3, datetime.date.today(), 1, "macarena")], file_path)

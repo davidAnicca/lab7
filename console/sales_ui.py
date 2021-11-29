@@ -11,8 +11,14 @@ class SalesUi(object):
     # s
     def show(self, command):
         sales = self.__sale_srv.get_all()
+        sales.sort(key=lambda s: str(s.get_event()))
+        event_str = ''
         for sale in sales:
-            print(str(sale))
+            if str(sale.get_event()) != event_str:
+                event_str = str(sale.get_event())
+                print(event_str + " " * (2 - (len(str(sale.get_event().get_id())))) + " -> " + str(sale.get_person()))
+            else:
+                print(" " * ((len(event_str) + 4) + 1) + str(sale.get_person()))
 
     # ins
     def add(self, command):
