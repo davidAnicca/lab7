@@ -4,6 +4,9 @@ from unittest import TestCase
 from domain.event import Event
 from domain.person import Person
 from domain.sale import Sale
+from repo.dto.event_repo_dto import EventRepoDTO
+from repo.dto.person_repo_dto import PersonRepoDTO
+from repo.dto.sale_repo_dto import SaleRepoDTO
 from repo.repo_error import RepoError
 from repo.sale_repo import SaleRepo
 
@@ -11,9 +14,19 @@ from repo.sale_repo import SaleRepo
 class TestSaleRepo(TestCase):
 
     def __init__(self):
-        self.__test_repo = SaleRepo([Sale(Person(1, "marcel", "address"), Event(1, datetime.date.today(), 2, "a")),
+        file_path = 'tester/sales.csv'
+        self.__person_repo = PersonRepoDTO([Person(1, "marcel", "address"), Person(2, "cristi", "address")],
+                                           'tester/persons.csv')
+        self.__event_repo = EventRepoDTO([Event(1, datetime.date.today(), 2, "a"),
+                                          Event(2, datetime.date.today(), 2, "2")],
+                                         'tester/events.csv')
+
+        self.__test_repo = SaleRepoDTO([Sale(Person(1, "marcel", "address"), Event(1, datetime.date.today(), 2, "a")),
                                      Sale(Person(2, "cristi", "address"), Event(1, datetime.date.today(), 2, "a")),
-                                     Sale(Person(2, "cristi", "address"), Event(2, datetime.date.today(), 2, "2"))])
+                                     Sale(Person(2, "cristi", "address"), Event(2, datetime.date.today(), 2, "2"))],
+                                       self.__person_repo,
+                                       self.__event_repo,
+                                       file_path)
 
     def test_find(self):
         try:
@@ -42,6 +55,8 @@ class TestSaleRepo(TestCase):
             self.fail()
 
     def test_add(self):
+        self.__person_repo.add(Person(7, "a", "a"))
+        self.__event_repo.add(Event(7, datetime.date.today(), 3, "as"))
         sale_to_add = Sale(Person(7, "a", "a"), Event(7, datetime.date.today(), 3, "as"))
         self.__test_repo.add(sale_to_add)
         sale_to_add = self.__test_repo.get_all()[0]

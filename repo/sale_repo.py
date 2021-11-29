@@ -7,11 +7,11 @@ from repo.repo_error import RepoError
 class SaleRepo(object):
 
     def __init__(self, sales: list):
-        self.__sales = sales
+        self._sales = sales
 
     # returns all sales from repo
     def get_all(self):
-        return self.__sales
+        return self._sales
 
     def assert_exist(self, sale):
         """
@@ -19,33 +19,10 @@ class SaleRepo(object):
         :param sale: given sale
         :raises: repo error if sale doesn't exist
         """
-        if sale not in self.__sales:
+        if sale not in self._sales:
             del sale
             raise RepoError("participarea nu există")
 
-    def find_by__person(self, person):
-        """
-        returns all sales that contain a person
-        :param person: given person
-        :return: a list
-        """
-        sales = []
-        for sale in self.__sales:
-            if sale.get_person() == person:
-                sales.append(sale)
-        return sales
-
-    def find_by_event(self, event):
-        """
-        return all sales that contain an event
-        :param event: given event
-        :return: a list
-        """
-        sales = []
-        for sale in self.__sales:
-            if sale.get_event() == event:
-                sales.append(sale)
-        return sales
 
     def find_by_pair(self, person: Person, event: Event):
         """
@@ -54,7 +31,7 @@ class SaleRepo(object):
         :param event: event param
         :return: found sale or None if sale cannot be found
         """
-        for sale in self.__sales:
+        for sale in self._sales:
             if sale.get_person() == person and sale.get_event() == event:
                 return sale
         return None
@@ -68,7 +45,7 @@ class SaleRepo(object):
         if self.find_by_pair(sale.get_person(), sale.get_event()) is not None:
             del sale
             raise RepoError("participarea deja există")
-        self.__sales.append(sale)
+        self._sales.append(sale)
 
     def delete(self, sale: Sale):
         """
@@ -77,5 +54,5 @@ class SaleRepo(object):
         :raise: RepoError if the sale doesn't exist
         """
         self.assert_exist(sale)
-        self.__sales.remove(sale)
+        self._sales.remove(sale)
         del sale
