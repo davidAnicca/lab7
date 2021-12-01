@@ -53,7 +53,7 @@ class Tests(object):
         unittest.TextTestRunner().run(suite)
 
         # generator test:
-        # random_gen_t = RandomGenT()
-        # random_gen_t.test_generate_persons()
+        # suite = unittest.defaultTestLoader.loadTestsFromTestCase(RandomGenT)
+        # unittest.TextTestRunner().run(suite)
 
     # print("teste trecute cu succes")
