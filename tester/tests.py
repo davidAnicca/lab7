@@ -25,11 +25,8 @@ class Tests(object):
         unittest.TextTestRunner().run(suite)
 
         # sales repo tests:    #todo
-        test_sales_repo = TestSaleRepo()
-        test_sales_repo.test_find()
-        test_sales_repo.test_find_by_pair()
-        test_sales_repo.test_add()
-        del test_sales_repo
+        suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestSaleRepo)
+        unittest.TextTestRunner().run(suite)
 
         # logic tests:
         suite = unittest.defaultTestLoader.loadTestsFromTestCase(LogicTests)

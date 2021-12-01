@@ -23,6 +23,9 @@ class Sale(object):
     def __str__(self):
         return str(self.__person) + (" "*(5-len(str(self.__person.get_id())))) + " ->" + (" "*3) + str(self.__event)
 
+    def __eq__(self, other):
+        return self.__person == other.get_person() and self.__event == other.get_event()
+
 
 
 

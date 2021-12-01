@@ -48,6 +48,10 @@ class SaleRepoDTO(SaleRepo):
         self.read_all()
         return SaleRepo.get_all(self)
 
+    def assert_exist(self, sale):
+        self.read_all()
+        return SaleRepo.assert_exist(self, sale)
+
     def find_by_pair(self, person: Person, event: Event):
         self.read_all()
         return SaleRepo.find_by_pair(self, person, event)

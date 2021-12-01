@@ -13,7 +13,7 @@ from repo.sale_repo import SaleRepo
 
 class TestSaleRepo(TestCase):
 
-    def __init__(self):
+    def setUp(self) -> None:
         file_path = 'tester/sales.csv'
         with open("tester/persons.csv", 'w') as f:
             f.write("")
@@ -24,72 +24,53 @@ class TestSaleRepo(TestCase):
         with open("tester/sales.csv", 'w') as f:
             f.write("")
             f.close()
-        self.__person_repo = PersonRepoDTO([Person(1, "marcel", "address"), Person(2, "cristi", "address")],
-                                           'tester/persons.csv')
-        self.__event_repo = EventRepoDTO([Event(1, datetime.date.today(), 2, "a"),
-                                          Event(2, datetime.date.today(), 2, "2")],
-                                         'tester/events.csv')
+        self.person_repo = PersonRepoDTO([Person(1, "marcel", "address"), Person(2, "cristi", "address")],
+                                         'tester/persons.csv')
+        self.event_repo = EventRepoDTO([Event(1, datetime.date.today(), 2, "a"),
+                                        Event(2, datetime.date.today(), 2, "2")],
+                                       'tester/events.csv')
 
-        self.__test_repo = SaleRepoDTO([Sale(Person(1, "marcel", "address"), Event(1, datetime.date.today(), 2, "a")),
-                                     Sale(Person(2, "cristi", "address"), Event(1, datetime.date.today(), 2, "a")),
-                                     Sale(Person(2, "cristi", "address"), Event(2, datetime.date.today(), 2, "2"))],
-                                       self.__person_repo,
-                                       self.__event_repo,
-                                       file_path)
+        self.test_repo = SaleRepoDTO([Sale(Person(1, "marcel", "address"), Event(1, datetime.date.today(), 2, "a")),
+                                      Sale(Person(2, "cristi", "address"), Event(1, datetime.date.today(), 2, "a")),
+                                      Sale(Person(2, "cristi", "address"), Event(2, datetime.date.today(), 2, "2"))],
+                                     self.person_repo,
+                                     self.event_repo,
+                                     file_path)
+
+    def tearDown(self) -> None:
+        del self.person_repo
+        del self.event_repo
+        del self.test_repo
 
     def test_find(self):
-        try:
-            self.__test_repo.assert_exist(self.__test_repo.get_all()[0])
-        except RepoError:
-            self.fail()
-        try:
-            self.__test_repo.assert_exist(Sale(Person(7, "a", "a"), Event(7, datetime.date.today(), 3, "as")))
-            self.fail()
-        except RepoError as e:
-            if str(e) != "participarea nu există":
-                self.fail()
+        self.test_repo.assert_exist(self.test_repo.get_all()[0])
+        self.assertRaises(RepoError, self.test_repo.assert_exist,
+                          Sale(Person(7, "a", "a"), Event(7, datetime.date.today(), 3, "as")))
 
     def test_find_by_pair(self):
-        sale: Sale = self.__test_repo.get_all()[0]
+        sale: Sale = self.test_repo.get_all()[0]
         person: Person = sale.get_person()
         event: Event = sale.get_event()
-        found_sale = self.__test_repo.find_by_pair(person, event)
-        if found_sale is None:
-            self.fail()
+        found_sale = self.test_repo.find_by_pair(person, event)
+        self.assertIsNotNone(found_sale)
         sale = Sale(Person(7, "a", "a"), Event(7, datetime.date.today(), 3, "as"))
         person = sale.get_person()
         event = sale.get_event()
-        found_sale = self.__test_repo.find_by_pair(person, event)
-        if found_sale is not None:
-            self.fail()
+        found_sale = self.test_repo.find_by_pair(person, event)
+        self.assertIsNone(found_sale)
 
     def test_add(self):
-        self.__person_repo.add(Person(7, "a", "a"))
-        self.__event_repo.add(Event(7, datetime.date.today(), 3, "as"))
+        self.person_repo.add(Person(7, "a", "a"))
+        self.event_repo.add(Event(7, datetime.date.today(), 3, "as"))
         sale_to_add = Sale(Person(7, "a", "a"), Event(7, datetime.date.today(), 3, "as"))
-        self.__test_repo.add(sale_to_add)
-        sale_to_add = self.__test_repo.get_all()[0]
-        try:
-            self.__test_repo.add(sale_to_add)
-            self.fail()
-        except RepoError as e:
-            if str(e) != "participarea deja există":
-                self.fail()
+        self.test_repo.add(sale_to_add)
+        self.assertIn(sale_to_add, self.test_repo.get_all())
+        sale_to_add = self.test_repo.get_all()[0]
+        self.assertRaises(RepoError, self.test_repo.add, sale_to_add)
 
     def test_delete(self):
         sale_to_delete = Sale(Person(7, "a", "a"), Event(7, datetime.date.today(), 3, "as"))
-        try:
-            self.__test_repo.delete(sale_to_delete)
-            self.fail()
-        except RepoError as e:
-            if str(e) != "participarea nu există":
-                self.fail()
-
-        sale_to_delete = self.__test_repo.get_all()[0]
-        self.__test_repo.delete(sale_to_delete)
-        if sale_to_delete in self.__test_repo.get_all()[0]:
-            self.fail()
-
-
-
-
+        self.assertRaises(RepoError, self.test_repo.delete, sale_to_delete)
+        sale_to_delete = self.test_repo.get_all()[0]
+        self.test_repo.delete(sale_to_delete)
+        self.assertNotIn(sale_to_delete, self.test_repo.get_all())
