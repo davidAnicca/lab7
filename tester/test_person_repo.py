@@ -11,81 +11,48 @@ from repo.sale_repo import SaleRepo
 
 class TestPersonRepo(TestCase):
 
-    def __init__(self):
+    def setUp(self) -> None:
         path = "tester/persons.csv"
         with open(path, "w") as f:
             f.write("")
             f.close()
         self.__test_repo = PersonRepoDTO([Person(1, "maria", "cluj"),
-                                       Person(2, "george", "turda"),
-                                       Person(3, "cornel", "constanta")], path)
+                                          Person(2, "george", "turda"),
+                                          Person(3, "cornel", "constanta")], path)
+
+    def tearDown(self) -> None:
+        del self.__test_repo
 
     def test_find(self):
         person = self.__test_repo.get_all()[0]
-        try:
-            self.__test_repo.find(person)
-        except RepoError:
-            self.fail()
-        person = Person(0, "a", "a")
-        try:
-            self.__test_repo.find(person)
-            self.fail()
-        except RepoError as e:
-            if str(e) != "persoana nu exista":
-                self.fail()
+        self.assertRaises(RepoError, self.__test_repo.find, Person(0, "a", "a"))
 
     def test_find_by_id(self):
         person = self.__test_repo.find(Person(1, "maria", "c"))
-        if person != self.__test_repo.get_all()[0]:
-            self.fail()
-        try:
-            person = self.__test_repo.find(Person(0, "a", "a"))
-            self.fail()
-        except RepoError:
-            pass
+        self.assertEqual(person, self.__test_repo.get_all()[0])
+        self.assertRaises(RepoError, self.__test_repo.find, Person(0, "a", "a"))
 
     def test_add(self):
         person_to_add = Person(4, "Ioan", "Bucuresti")
         self.__test_repo.add(person_to_add)
         persons = self.__test_repo.get_all()
-        if person_to_add not in persons:
-            self.fail()
+        self.assertIn(person_to_add, persons)
         person_to_add = Person(1, "Marcel", "Bacau")
-        try:
-            self.__test_repo.add(person_to_add)
-            self.fail()
-        except RepoError as e:
-            if str(e) != "id deja existent":
-                self.fail()
+        self.assertRaises(RepoError, self.__test_repo.add, person_to_add)
 
     def test_modify(self):
         person_to_be_modified: Person = self.__test_repo.get_all()[0]
         new_person = (Person(person_to_be_modified.get_id(), "marcel", "new address"))
         self.__test_repo.modify(new_person)
         person_to_be_modified: Person = self.__test_repo.find(new_person)
-        if person_to_be_modified.get_name() != "marcel":
-            self.fail()
-        if person_to_be_modified.get_address() != "new address":
-            self.fail()
+        self.assertEqual(person_to_be_modified.get_name(), "marcel")
+        self.assertEqual(person_to_be_modified.get_address(), "new address")
         person_to_be_modified: Person = Person("-7", "k", "k")
-        try:
-            self.__test_repo.modify(person_to_be_modified)
-            self.fail()
-        except RepoError as e:
-            if str(e) != "persoana nu exista":
-                self.fail()
+        self.assertRaises(RepoError, self.__test_repo.modify, person_to_be_modified)
 
     def test_delete(self):
         person_to_be_deleted: Person = self.__test_repo.get_all()[0]
-        used_sale = Sale(person_to_be_deleted, Event(1, datetime.date.today(), 1, "a"))
-        sale_repo = SaleRepo([used_sale])
         self.__test_repo.delete(person_to_be_deleted)
-        if person_to_be_deleted in self.__test_repo.get_all():
-            self.fail()
+        self.assertNotIn(person_to_be_deleted, self.__test_repo.get_all())
         person_to_be_deleted: Person = Person(-1, "a", "a")
-        try:
-            self.__test_repo.delete(person_to_be_deleted)
-            self.fail()
-        except RepoError as e:
-            if str(e) != "persoana nu exista":
-                self.fail()
+        self.assertRaises(RepoError, self.__test_repo.delete, person_to_be_deleted)

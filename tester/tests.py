@@ -16,14 +16,9 @@ class Tests(object):
 
     @staticmethod
     def run_tests():
-        # person repo tests:   #todo
-        test_person_repo = TestPersonRepo()
-        test_person_repo.test_find()
-        test_person_repo.test_find_by_id()
-        test_person_repo.test_add()
-        test_person_repo.test_modify()
-        test_person_repo.test_delete()
-        del test_person_repo
+        # person repo tests:
+        suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestPersonRepo)
+        unittest.TextTestRunner().run(suite)
 
         # event repo tests:   #todo
         test_event_repo = TestEventRepo()
