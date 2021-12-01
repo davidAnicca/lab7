@@ -21,12 +21,8 @@ class Tests(object):
         unittest.TextTestRunner().run(suite)
 
         # event repo tests:   #todo
-        test_event_repo = TestEventRepo()
-        test_event_repo.test_find()
-        test_event_repo.test_add()
-        test_event_repo.test_modify()
-        test_event_repo.test_delete()
-        del test_event_repo
+        suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestEventRepo)
+        unittest.TextTestRunner().run(suite)
 
         # sales repo tests:    #todo
         test_sales_repo = TestSaleRepo()
