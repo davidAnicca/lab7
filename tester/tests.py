@@ -16,29 +16,17 @@ class Tests(object):
 
     @staticmethod
     def run_tests():
-        # person repo tests:
-        suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestPersonRepo)
-        unittest.TextTestRunner().run(suite)
 
-        # event repo tests:   #todo
-        suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestEventRepo)
-        unittest.TextTestRunner().run(suite)
+        test_classes = [TestPersonRepo,
+                        TestEventRepo,
+                        TestSaleRepo,
+                        LogicTests,
+                        ValidationTests,
+                        ControllerTest]
 
-        # sales repo tests:    #todo
-        suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestSaleRepo)
-        unittest.TextTestRunner().run(suite)
-
-        # logic tests:
-        suite = unittest.defaultTestLoader.loadTestsFromTestCase(LogicTests)
-        unittest.TextTestRunner().run(suite)
-
-        # validation test:
-        suite = unittest.defaultTestLoader.loadTestsFromTestCase(ValidationTests)
-        unittest.TextTestRunner().run(suite)
-
-        # controller test:
-        suite = unittest.defaultTestLoader.loadTestsFromTestCase(ControllerTest)
-        unittest.TextTestRunner().run(suite)
+        for test_class in test_classes:
+            suite = unittest.defaultTestLoader.loadTestsFromTestCase(test_class)
+            unittest.TextTestRunner().run(suite)
 
         # generator test:
         # suite = unittest.defaultTestLoader.loadTestsFromTestCase(RandomGenT)
