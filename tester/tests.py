@@ -42,13 +42,8 @@ class Tests(object):
         del test_sales_repo
 
         # logic tests:
-        logic_tests = LogicTests()
-        logic_tests.test_get_event_w_max_duration()
-        logic_tests.test_get_20_p()
-        logic_tests.test_get_person_with_most_events()
-        logic_tests.test_give_all_events_ordered_by_date()
-        logic_tests.test_give_all_events_ordered_by_description()
-        del logic_tests
+        suite = unittest.defaultTestLoader.loadTestsFromTestCase(LogicTests)
+        unittest.TextTestRunner().run(suite)
 
         # validation test:
         validation_tests = ValidationTests()
