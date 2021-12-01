@@ -1,3 +1,5 @@
+import unittest
+
 from controller.random_generator import RandomGen
 from tester import controller_tests
 from tester.controller_tests import ControllerTest
@@ -54,7 +56,8 @@ class Tests(object):
         del validation_tests
 
         # controller test:
-
+        suite = unittest.defaultTestLoader.loadTestsFromTestCase(ControllerTest)
+        unittest.TextTestRunner().run(suite)
         # generator test:
         # random_gen_t = RandomGenT()
         # random_gen_t.test_generate_persons()
