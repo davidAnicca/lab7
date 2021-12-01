@@ -16,7 +16,7 @@ class Tests(object):
 
     @staticmethod
     def run_tests():
-        # person repo tests:
+        # person repo tests:   #todo
         test_person_repo = TestPersonRepo()
         test_person_repo.test_find()
         test_person_repo.test_find_by_id()
@@ -25,16 +25,15 @@ class Tests(object):
         test_person_repo.test_delete()
         del test_person_repo
 
-        # event repo tests:
+        # event repo tests:   #todo
         test_event_repo = TestEventRepo()
         test_event_repo.test_find()
-
         test_event_repo.test_add()
         test_event_repo.test_modify()
         test_event_repo.test_delete()
         del test_event_repo
 
-        # sales repo tests:
+        # sales repo tests:    #todo
         test_sales_repo = TestSaleRepo()
         test_sales_repo.test_find()
         test_sales_repo.test_find_by_pair()
@@ -46,18 +45,15 @@ class Tests(object):
         unittest.TextTestRunner().run(suite)
 
         # validation test:
-        validation_tests = ValidationTests()
-        validation_tests.test_validate_event()
-        del validation_tests
+        suite = unittest.defaultTestLoader.loadTestsFromTestCase(ValidationTests)
+        unittest.TextTestRunner().run(suite)
 
         # controller test:
         suite = unittest.defaultTestLoader.loadTestsFromTestCase(ControllerTest)
         unittest.TextTestRunner().run(suite)
+
         # generator test:
         # random_gen_t = RandomGenT()
         # random_gen_t.test_generate_persons()
-
-
-
 
     # print("teste trecute cu succes")
