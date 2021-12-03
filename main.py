@@ -17,7 +17,7 @@ class Main(object):
 
         person_repo = PersonRepoDTO([], "repo/files/persons.csv")
         event_repo = EventRepoDTO([], "repo/files/events.csv")
-        sale_repo = SaleRepoDTO([], person_repo, event_repo, "repo/files/sales.csv")
+        sale_repo = SaleRepoDTO([], person_repo, event_repo, "repo/files/sales.txt")
 
         person_srv = PersonService(person_repo, sale_repo)
         event_srv = EventService(event_repo, sale_repo)
