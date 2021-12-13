@@ -14,14 +14,14 @@ from repo.sale_repo import SaleRepo
 class TestSaleRepo(TestCase):
 
     def setUp(self) -> None:
-        file_path = 'tester/sales.txt'
+        file_path = 'tester/sales.csv'
         with open("tester/persons.csv", 'w') as f:
             f.write("")
             f.close()
         with open("tester/events.csv", 'w') as f:
             f.write("")
             f.close()
-        with open("tester/sales.txt", 'w') as f:
+        with open("tester/sales.csv", 'w') as f:
             f.write("")
             f.close()
         self.person_repo = PersonRepoDTO([Person(1, "marcel", "address"), Person(2, "cristi", "address")],
