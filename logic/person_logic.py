@@ -1,5 +1,6 @@
 from domain.event import Event
 from domain.person import Person
+from logic import sorting
 from repo.person_repo import PersonRepo
 from repo.sale_repo import SaleRepo
 
@@ -50,7 +51,8 @@ class PersonLogic(object):
         for sale in sales:
             if sale.get_person() == person:
                 events.append(sale.get_event())
-        events.sort(key=lambda e: e.get_date())
+        sorting.sort(events, key=lambda e: e.get_date())
+        # events.sort(key=lambda e: e.get_date())
         return events
 
     def get_all_my_events_ordered_by_duration(self, person: Person):
@@ -64,5 +66,6 @@ class PersonLogic(object):
         for sale in sales:
             if sale.get_person() == person:
                 events.append(sale.get_event())
-        events.sort(key=lambda e: e.get_description())
+        sorting.sort(events, key=lambda e: e.get_description())
+        # events.sort(key=lambda e: e.get_description())
         return events

@@ -44,10 +44,10 @@ def shell_sort(collection, key, reverse):
                 back -= 1
         gap //= 2
 
-
-lst = [(7, 9), (4, 9), (4, 9), (-20, 7), (7, 9)]
-sort(lst, key=lambda x: x[0], reverse=False)
-print(lst)
+#test
+# lst = [(7, 9), (4, 9), (4, 9), (-20, 7), (7, 9)]
+# sort(lst, key=lambda x: x[0], reverse=False)
+# print(lst)
 
 # print(default_cmp(1, 2))
 # print(default_cmp(0, 0))

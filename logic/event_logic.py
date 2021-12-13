@@ -1,3 +1,4 @@
+from logic import sorting
 from repo.event_repo import EventRepo
 from repo.sale_repo import SaleRepo
 
@@ -41,7 +42,8 @@ class EventLogic(object):
                 if sale.get_event() == event:
                     participants += 1
             events_w_participants.append((event, participants))
-        events_w_participants.sort(reverse=True, key=sec)
+        sorting.sort(events_w_participants, key=sec, reverse=True)
+        # events_w_participants.sort(reverse=True, key=sec)
         first_events = []
         for events_w_participant in events_w_participants:
             first_events.append(events_w_participant[0])
