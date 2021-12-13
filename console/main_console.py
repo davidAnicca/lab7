@@ -38,9 +38,9 @@ class MainConsole(object):
             "a": self.__p_ui.active,
             "eo": self.__p_ui.events_ordered_date,
             "eod": self.__p_ui.events_ordered_dur,
-            "soldouts" : self.__e_ui.soldouts,
+            "soldouts": self.__e_ui.soldouts,
             "rs": self.__s_ui.random,
-            "top3":self.__e_ui.top3,
+            "top3": self.__e_ui.top3,
         }
 
     # h
@@ -49,31 +49,61 @@ class MainConsole(object):
             print(str(com), end="  ;  ")
         print()
 
+    # ! recursive console
     def run_console(self):
         # print(StringComparison.ratio("addc", "addp"))
-        while True:
-            command = input("\n@>")
-            command = command.strip()
-            if command == "":
-                continue
-            if command == "exit":
-                return
-            try:
-                method = self.__commands[command.split()[0]](command)
-            except KeyError:
-                print("comandă invalidă")
-                cmd = command.split()
-                commands = strings.strings.keys()
-                print("ai putea încerca: ")
-                for com in commands:
-                    r = StringComparison.ratio(cmd[0], str(com))
-                    if r > 0.5:
-                        print(strings.strings[str(com)])
-            except ValidationError as e:
-                print(str(e))
-            except ValueError:
-                print("valori numerice invalide")
-            except TypeError:
-                print("imposibil de transformat")
-            except Exception as e:
-                print(str(e))
+        command = input("\n@>")
+        command = command.strip()
+        if command == "":
+            self.run_console()
+        if command == "exit":
+            return
+        try:
+            method = self.__commands[command.split()[0]](command)
+        except KeyError:
+            print("comandă invalidă")
+            cmd = command.split()
+            commands = strings.strings.keys()
+            print("ai putea încerca: ")
+            for com in commands:
+                r = StringComparison.ratio(cmd[0], str(com))
+                if r > 0.5:
+                    print(strings.strings[str(com)])
+        except ValidationError as e:
+            print(str(e))
+        except ValueError:
+            print("valori numerice invalide")
+        except TypeError:
+            print("imposibil de transformat")
+        except Exception as e:
+            print(str(e))
+        self.run_console()  # recursive call
+
+    # def run_console(self):
+    #     # print(StringComparison.ratio("addc", "addp"))
+    #     while True:
+    #         command = input("\n@>")
+    #         command = command.strip()
+    #         if command == "":
+    #             self.run_console()
+    #         if command == "exit":
+    #             return
+    #         try:
+    #             method = self.__commands[command.split()[0]](command)
+    #         except KeyError:
+    #             print("comandă invalidă")
+    #             cmd = command.split()
+    #             commands = strings.strings.keys()
+    #             print("ai putea încerca: ")
+    #             for com in commands:
+    #                 r = StringComparison.ratio(cmd[0], str(com))
+    #                 if r > 0.5:
+    #                     print(strings.strings[str(com)])
+    #         except ValidationError as e:
+    #             print(str(e))
+    #         except ValueError:
+    #             print("valori numerice invalide")
+    #         except TypeError:
+    #             print("imposibil de transformat")
+    #         except Exception as e:
+    #             print(str(e))

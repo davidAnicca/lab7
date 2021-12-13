@@ -19,18 +19,23 @@ class SaleRepoDTO(SaleRepo):
             self.append_one(sale)
         self.read_all()
 
+    #recursive method
+    def reader(self, f):
+        line = f.readline()
+        if line.strip() == "":
+            return
+        parts = line.split(',')
+        p_id = int(parts[0])
+        e_id = int(parts[1])
+        person = self.__person_repo.find(Person(p_id, '', ''))
+        event = self.__event_repo.find(Event(e_id, datetime.datetime.now(), 0, ''))
+        self._sales.append(Sale(person, event))
+        self.reader(f)   #recursive call
+
     def read_all(self):
         with open(self.__file_path, 'r') as f:
-            line = f.readline()
             self._sales = []
-            while line != "":
-                parts = line.split(',')
-                p_id = int(parts[0])
-                e_id = int(parts[1])
-                person = self.__person_repo.find(Person(p_id, '', ''))
-                event = self.__event_repo.find(Event(e_id, datetime.datetime.now(), 0, ''))
-                self._sales.append(Sale(person, event))
-                line = f.readline()
+            self.reader(f)
             f.close()
 
     def save_all(self):

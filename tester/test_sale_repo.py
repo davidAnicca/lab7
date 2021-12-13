@@ -47,6 +47,7 @@ class TestSaleRepo(TestCase):
         self.assertRaises(RepoError, self.test_repo.assert_exist,
                           Sale(Person(7, "a", "a"), Event(7, datetime.date.today(), 3, "as")))
 
+
     def test_find_by_pair(self):
         sale: Sale = self.test_repo.get_all()[0]
         person: Person = sale.get_person()
@@ -58,6 +59,7 @@ class TestSaleRepo(TestCase):
         event = sale.get_event()
         found_sale = self.test_repo.find_by_pair(person, event)
         self.assertIsNone(found_sale)
+        print("ok")
 
     def test_add(self):
         self.person_repo.add(Person(7, "a", "a"))
