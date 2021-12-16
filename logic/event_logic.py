@@ -42,7 +42,7 @@ class EventLogic(object):
                 if sale.get_event() == event:
                     participants += 1
             events_w_participants.append((event, participants))
-        sorting.sort(events_w_participants, key=sec, reverse=True)
+        sorting.sort(events_w_participants, keyy=sec, reverse=True)
         # events_w_participants.sort(reverse=True, key=sec)
         first_events = []
         for events_w_participant in events_w_participants:

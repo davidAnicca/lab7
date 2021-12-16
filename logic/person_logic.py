@@ -51,7 +51,7 @@ class PersonLogic(object):
         for sale in sales:
             if sale.get_person() == person:
                 events.append(sale.get_event())
-        sorting.sort(events, key=lambda e: e.get_date())
+        sorting.sort(events, keyy=lambda e: e.get_date())
         # events.sort(key=lambda e: e.get_date())
         return events
 
@@ -66,6 +66,6 @@ class PersonLogic(object):
         for sale in sales:
             if sale.get_person() == person:
                 events.append(sale.get_event())
-        sorting.sort(events, key=lambda e: e.get_description())
+        sorting.sort(events, keyy=lambda e: e.get_description())
         # events.sort(key=lambda e: e.get_description())
         return events

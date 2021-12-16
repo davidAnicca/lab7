@@ -11,7 +11,7 @@ class SalesUi(object):
     # s
     def show(self, command):
         sales = self.__sale_srv.get_all()
-        sales.sort(key=lambda s: str(s.get_event()))
+        sales.sort(keyy=lambda s: str(s.get_event()))
         event_str = ''
         for sale in sales:
             if str(sale.get_event()) != event_str:
