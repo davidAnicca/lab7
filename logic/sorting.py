@@ -79,6 +79,4 @@ def test():
 
 
 test()
-# print(default_cmp(1, 2))
-# print(default_cmp(0, 0))
-# print(default_cmp(2, 1))
+
